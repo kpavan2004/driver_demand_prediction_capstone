@@ -1,0 +1,14 @@
+
+apiVersion: v1
+kind: Pod
+metadata:
+ name: myapp
+ labels:
+  name: myapp
+  environment: prod
+spec:
+ containers:
+ - name : myapp
+   image: ramirk/llmdemo
+   ports:
+    - containerPort: 7860

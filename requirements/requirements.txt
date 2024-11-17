@@ -1,0 +1,14 @@
+joblib
+mlflow
+xgboost
+gradio
+prometheus-client
+fastapi
+uvicorn
+numpy
+pandas
+pydantic
+scikit-learn
+strictyaml
+# ruamel.yamlcd
+build

@@ -1,0 +1,25 @@
+version: '3.10'
+
+services:
+  application:
+    image: kpavan2004/driver_delivery_time_pred-fastapi:latest
+    container_name: app_cont
+    ports:
+      - "8001:8001"
+    # networks:
+    #   - prometheus_network
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prom_cont
+    volumes:
+      # - C:\IISC_AI_and_MLOps\course_materials\Capstone_Project\project_template\driver_demand_prediction_capstone\Prometheus\prometheus.yml:/etc/prometheus/prometheus.yml
+      # - C:\IISC_AI_and_MLOps\course_materials\Capstone_Project\project_template\driver_demand_prediction_capstone\Prometheus\prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+#     networks:
+#       - prometheus_network
+
+# networks:
+#   prometheus_network:
+#     driver: bridge
