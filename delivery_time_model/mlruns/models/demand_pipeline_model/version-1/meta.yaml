@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1731686702914
+current_stage: None
+description: null
+last_updated_timestamp: 1731686702914
+name: demand_pipeline_model
+run_id: 86c5c4688c844ea8b35618a22d3bff08
+run_link: null
+source: file:///C:/IISC%20AI%20and%20MLOps/course_materials/Capstone%20Project/project_template/driver_demand/demand_model/mlruns/0/86c5c4688c844ea8b35618a22d3bff08/artifacts/model
+status: READY
+status_message: null
+storage_location: file:///C:/IISC%20AI%20and%20MLOps/course_materials/Capstone%20Project/project_template/driver_demand/demand_model/mlruns/0/86c5c4688c844ea8b35618a22d3bff08/artifacts/model
+user_id: null
+version: 1
