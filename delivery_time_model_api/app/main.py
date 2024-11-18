@@ -85,7 +85,7 @@ def predict_delivery_time(ID,Delivery_person_ID,Delivery_person_Age,Delivery_per
     return pred_results['predictions'][0]
 
 # Load city values from the YAML file
-with open("C:\IISC_AI_and_MLOps\course_materials\Capstone_Project\project_template\driver_demand_prediction_capstone\delivery_time_model\config.yml", "r") as file:
+with open("/workspaces/driver_demand_prediction_capstone/delivery_time_model/config.yml", "r") as file:
     config = yaml.safe_load(file)
     city_area_values = config["city_area_mappings"]
     Weatherconditions_values = config["weather_mappings"]
