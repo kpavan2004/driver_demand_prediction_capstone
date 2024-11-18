@@ -17,21 +17,21 @@ from delivery_time_model.processing.data_manager import pre_pipeline_preparation
 
 def validate_inputs(*, input_df: pd.DataFrame) -> Tuple[pd.DataFrame, Optional[dict]]:
     """Check model inputs for unprocessable values."""
-    print("columns to the input of validate_inputs")
-    print(input_df.columns)
+    # print("columns to the input of validate_inputs")
+    # print(input_df.columns)
     # pre_processed = pre_pipeline_preparation(data_frame = input_df)
     pre_processed = pre_pipeline_trans(data_frame = input_df)
-    print("after pre_pipeline_trans step")
-    print(pre_processed.iloc[0].to_dict())
-    print(config.ml_config.features)
+    # print("after pre_pipeline_trans step")
+    # print(pre_processed.iloc[0].to_dict())
+    # print(config.ml_config.features)
     
     # validated_data = pre_processed[config.ml_config.features].copy()
     validated_data = pre_processed[config.ml_config.features]
-    print("after validated_data stmtm")
-    print(validated_data.iloc[0].to_dict())
+    # print("after validated_data stmtm")
+    # print(validated_data.iloc[0].to_dict())
     errors = None
     duplicates = validated_data.columns[validated_data.columns.duplicated()].tolist()
-    print("Duplicate columns:", duplicates)
+    # print("Duplicate columns:", duplicates)
 
 
     try:

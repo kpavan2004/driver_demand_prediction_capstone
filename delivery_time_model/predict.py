@@ -21,31 +21,31 @@ demand_pipe = load_pipeline(file_name = pipeline_file_name)
 
 def make_prediction(*, input_data: Union[pd.DataFrame, dict]) -> dict:
     """Make a prediction using a saved model """
-    print("In make prediction function")
+    # print("In make prediction function")
     
     # Drop records where lat and long are zero
     # input_df = pd.DataFrame(input_data)
     # input_df = input_df[-((input_df["Restaurant_latitude"]==0.0) & (input_df["Restaurant_longitude"]==0.0)) ]
     # print(input_df.shape)
     validated_data, errors = validate_inputs(input_df = pd.DataFrame(input_data))
-    print("after calling validate_inputs function")
-    print(validated_data.columns)
-    print(validated_data.head(1))
-    print(errors)
+    # print("after calling validate_inputs function")
+    # print(validated_data.columns)
+    # print(validated_data.head(1))
+    # print(errors)
     #validated_data = validated_data.reindex(columns = ['dteday', 'season', 'hr', 'holiday', 'weekday', 'workingday', 
     #                                                   'weathersit', 'temp', 'atemp', 'hum', 'windspeed', 'yr', 'mnth'])
     validated_data = validated_data.reindex(columns = config.ml_config.features)
-    print("After reindex")
-    print(validated_data.iloc[0].to_dict())
+    # print("After reindex")
+    # print(validated_data.iloc[0].to_dict())
     
     results = {"predictions": None, "version": _version, "errors": errors}
       
     if not errors:
-        print("inside if statement")
+        # print("inside if statement")
         predictions = demand_pipe.predict(validated_data)
-        print("after prediction statement")
-        print(type(predictions))
-        print(predictions)
+        # print("after prediction statement")
+        # print(type(predictions))
+        # print(predictions)
         results = {"predictions": np.floor(predictions), "version": _version, "errors": errors}
         print(results)
 

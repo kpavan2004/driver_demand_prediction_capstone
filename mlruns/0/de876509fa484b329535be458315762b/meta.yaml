@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/de876509fa484b329535be458315762b/artifacts
+end_time: 1731949161832
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: de876509fa484b329535be458315762b
+run_name: mysterious-doe-476
+run_uuid: de876509fa484b329535be458315762b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1731949149590
+status: 3
+tags: []
+user_id: kudathini

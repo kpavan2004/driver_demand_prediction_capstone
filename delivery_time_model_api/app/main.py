@@ -4,11 +4,14 @@ file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
 sys.path.append(str(root))
 #print(sys.path)
+import gradio as gr
 from typing import Any
 import pandas as pd
 import numpy as np
+import yaml
 import sys
 from pathlib import Path
+
 sys.path.append(str(Path(__file__).parent.parent))
 
 from fastapi import APIRouter, FastAPI, Request,Response
@@ -25,6 +28,7 @@ from sklearn.metrics import r2_score,accuracy_score, f1_score, precision_score, 
 import prometheus_client as prom
 from delivery_time_model import __version__ as ml_version
 from delivery_time_model.predict import make_prediction
+
 
 
 app = FastAPI(
@@ -53,74 +57,79 @@ def index(request: Request) -> Any:
 
     return HTMLResponse(content=body)
 
-# def predict_delivery_time(ID,Delivery_person_ID,Delivery_person_Age,Delivery_person_Ratings,Restaurant_latitude,Restaurant_longitude,Delivery_location_latitude,Delivery_location_longitude,Order_Date,Time_Orderd,Time_Order_picked,Weatherconditions,Road_traffic_density,Vehicle_condition,Type_of_order,Type_of_vehicle,multiple_deliveries,Festival,City):
-#     ID=str(ID)
-#     Delivery_person_ID=str(Delivery_person_ID)
-#     Delivery_person_Age=str(Delivery_person_Age)
-#     Delivery_person_Ratings=str(Delivery_person_Ratings)
-#     Restaurant_latitude=str(Restaurant_latitude)
-#     Restaurant_longitude=str(Restaurant_longitude)
-#     Delivery_location_latitude=str(Delivery_location_latitude)
-#     Delivery_location_longitude=str(Delivery_location_longitude)
-#     Order_Date=str(Order_Date)
-#     Time_Orderd=str(Time_Orderd)
-#     Time_Order_picked=str(Time_Order_picked)
-#     Weatherconditions=str(Weatherconditions)
-#     Road_traffic_density=str(Road_traffic_density)
-#     Vehicle_condition=str(Vehicle_condition)
-#     Type_of_order=str(Type_of_order)
-#     Type_of_vehicle=str(Type_of_vehicle)
-#     multiple_deliveries=str(multiple_deliveries)
-#     Festival=str(Festival)
-#     City=str(City)
+def predict_delivery_time(ID,Delivery_person_ID,Delivery_person_Age,Delivery_person_Ratings,Restaurant_latitude,Restaurant_longitude,Delivery_location_latitude,Delivery_location_longitude,Order_Date,Time_Orderd,Time_Order_picked,Weatherconditions,Road_traffic_density,Vehicle_condition,Type_of_order,Type_of_vehicle,multiple_deliveries,Festival,City):
+    ID=str(ID)
+    Delivery_person_ID=str(Delivery_person_ID)
+    Delivery_person_Age=str(Delivery_person_Age)
+    Delivery_person_Ratings=str(Delivery_person_Ratings)
+    Restaurant_latitude=str(Restaurant_latitude)
+    Restaurant_longitude=str(Restaurant_longitude)
+    Delivery_location_latitude=str(Delivery_location_latitude)
+    Delivery_location_longitude=str(Delivery_location_longitude)
+    Order_Date=str(Order_Date)
+    Time_Orderd=str(Time_Orderd)
+    Time_Order_picked=str(Time_Order_picked)
+    Weatherconditions=str(Weatherconditions)
+    Road_traffic_density=str(Road_traffic_density)
+    Vehicle_condition=str(Vehicle_condition)
+    Type_of_order=str(Type_of_order)
+    Type_of_vehicle=str(Type_of_vehicle)
+    multiple_deliveries=str(multiple_deliveries)
+    Festival=str(Festival)
+    City=str(City)
     
-#     input = [ID,Delivery_person_ID,Delivery_person_Age,Delivery_person_Ratings,Restaurant_latitude,Restaurant_longitude,Delivery_location_latitude,Delivery_location_longitude,Order_Date,Time_Orderd,Time_Order_picked,Weatherconditions,Road_traffic_density,Vehicle_condition,Type_of_order,Type_of_vehicle,multiple_deliveries,Festival,City]
-#     input_df = pd.DataFrame([input],columns = ['ID','Delivery_person_ID','Delivery_person_Age','Delivery_person_Ratings','Restaurant_latitude','Restaurant_longitude','Delivery_location_latitude','Delivery_location_longitude','Order_Date','Time_Orderd','Time_Order_picked','Weatherconditions','Road_traffic_density','Vehicle_condition','Type_of_order','Type_of_vehicle','multiple_deliveries','Festival','City'])
-#     pred_results = make_prediction(input_data=input_df.replace({np.nan: None}))
-#     return pred_results[0]
+    input = [ID,Delivery_person_ID,Delivery_person_Age,Delivery_person_Ratings,Restaurant_latitude,Restaurant_longitude,Delivery_location_latitude,Delivery_location_longitude,Order_Date,Time_Orderd,Time_Order_picked,Weatherconditions,Road_traffic_density,Vehicle_condition,Type_of_order,Type_of_vehicle,multiple_deliveries,Festival,City]
+    input_df = pd.DataFrame([input],columns = ['ID','Delivery_person_ID','Delivery_person_Age','Delivery_person_Ratings','Restaurant_latitude','Restaurant_longitude','Delivery_location_latitude','Delivery_location_longitude','Order_Date','Time_Orderd','Time_Order_picked','Weatherconditions','Road_traffic_density','Vehicle_condition','Type_of_order','Type_of_vehicle','multiple_deliveries','Festival','City'])
+    print(input_df.head())
+    pred_results = make_prediction(input_data=input_df.replace({np.nan: None}))
+    return pred_results['predictions'][0]
 
-#     ID = gr.Slider(0, 100, label="ID", value=70, info="Choose age between 0 and 100")
-#     Delivery_person_ID = gr.Radio(["0", "1"], label="Delivery_person_ID",value="0", info="Does patient have anaemia ->  0-False, 1-True")
-#     Delivery_person_Age = gr.Slider(0, 1000, label="Delivery_person_Age",value=161, info="Choose creatinine_phosphokinase between 0 and 1000")
-#     Delivery_person_Ratings = gr.Radio(["0", "1"], label="Delivery_person_Ratings", value="0",info="Does patient have diabetes ->  0-False, 1-True")
-#     Restaurant_latitude = gr.Slider(0, 100, label="Restaurant_latitude",value=25, info="Choose ejection_fraction between 0 and 100")
-#     Restaurant_longitude = gr.Radio(["0", "1"], label="Restaurant_longitude",value="0", info="Does patient have High BP ->  0-False, 1-True")
-#     Delivery_location_latitude = gr.Slider(25000, 850000, label="Delivery_location_latitude",value=244000, info="Choose platelets between 25000 and 850000")
-#     Delivery_location_longitude = gr.Slider(0, 10, label="Delivery_location_longitude",value=1.2, info="Choose serum_creatinine between 0 and 10")
-#     Order_Date = gr.Slider(100, 150, label="Order_Date",value=142, info="Choose serum_sodium between 100 and 150")
-#     Time_Orderd =  gr.Radio(["0", "1"], label="Time_Orderd",value="0", info="Sex ->  0-Female, 1-Male")
-#     Time_Order_picked = gr.Radio(["0", "1"], label="Time_Order_picked",value="0", info="Does patient smoke ->  0-False, 1-True")
-#     Weatherconditions = gr.Slider(0, 365, label="Weatherconditions",value=66, info="Choose time between 0 and 365")
-#     Road_traffic_density = gr.Slider(0, 365, label="Road_traffic_density",value=66, info="Choose time between 0 and 365")
-#     Vehicle_condition = gr.Slider(0, 365, label="Vehicle_condition",value=66, info="Choose time between 0 and 365")
-#     Type_of_order = gr.Slider(0, 365, label="Type_of_order",value=66, info="Choose time between 0 and 365")
-#     Type_of_vehicle = gr.Slider(0, 365, label="Type_of_vehicle",value=66, info="Choose time between 0 and 365")
-#     multiple_deliveries = gr.Slider(0, 365, label="multiple_deliveries",value=66, info="Choose time between 0 and 365")
-#     Festival = gr.Slider(0, 365, label="Festival",value=66, info="Choose time between 0 and 365")
-#     City= gr.Slider(0, 365, label="City",value=66, info="Choose time between 0 and 365")
+# Load city values from the YAML file
+with open("C:\IISC_AI_and_MLOps\course_materials\Capstone_Project\project_template\driver_demand_prediction_capstone\delivery_time_model\config.yml", "r") as file:
+    config = yaml.safe_load(file)
+    city_area_values = config["city_area_mappings"]
+    Weatherconditions_values = config["weather_mappings"]
+    Road_traffic_density_values = config["traff_den_mappings"]
+    order_type_values = config["order_type_mappings"]
+    vehicle_values = config["vehicle_mappings"]
+    festival_values = config["festival_mappings"]
+        
+ID = gr.Textbox( label="ID", value='0xb379')
+Delivery_person_ID = gr.Textbox( label="Delivery_person_ID",value="BANGRES18DEL02")
+Delivery_person_Age = gr.Slider(0, 100, label="Delivery_person_Age",value=34)
+Delivery_person_Ratings = gr.Textbox( label="Delivery_person_Ratings", value="4.5")
+Restaurant_latitude = gr.Textbox(label="Restaurant_latitude",value="12.913041")
+Restaurant_longitude = gr.Textbox( label="Restaurant_longitude",value="77.683237")
+Delivery_location_latitude = gr.Textbox( label="Delivery_location_latitude",value="13.043041")
+Delivery_location_longitude = gr.Textbox(label="Delivery_location_longitude",value="77.813237")
+Order_Date = gr.Textbox( label="Order_Date",value="25-03-2022",info="Format: dd-mm-yyyy")
+Time_Orderd =  gr.Textbox( label="Time_Orderd",value="19:45:00",info="Format: hh:mm:ss")
+Time_Order_picked = gr.Textbox(label="Time_Order_picked",value="19:50:00",info="Format: hh:mm:ss")
+Weatherconditions = gr.Dropdown(choices=Weatherconditions_values,label="Weatherconditions",value="Stormy")
+Road_traffic_density = gr.Dropdown( choices=Road_traffic_density_values, label="Road_traffic_density",value="Jam")
+Vehicle_condition = gr.Textbox( label="Vehicle_condition",value="2")
+Type_of_order = gr.Dropdown(choices=order_type_values,label="Type_of_order",value="Snack")
+Type_of_vehicle = gr.Dropdown(choices=vehicle_values,label="Type_of_vehicle",value="scooter")
+multiple_deliveries = gr.Textbox(label="multiple_deliveries",value="1")
+Festival = gr.Radio(["Yes", "No"], label="Festival",value="No")
+City= gr.Dropdown(choices=city_area_values, label="City",value="Metropolitian")  # Dropdown for City
+    
 
-# # Output response
-# outputs = gr.Textbox(type="text", label='The patient survival predictions is :')
-
-
-# # Gradio interface to generate UI link
-# title = "Patient Survival Prediction"
-# description = "Predict survival of patient with heart failure, given their clinical record"
-
-
-# iface = gr.Interface(fn = predict_death_event,
-#                          inputs = [age,anaemia,creatinine_phosphokinase,diabetes,ejection_fraction,high_blood_pressure,platelets,serum_creatinine,serum_sodium,sex,smoking,time],
-#                          outputs = [outputs],
-#                          title = title,
-#                          description = description,
-#                          allow_flagging='never')
-
-# # iface.launch(share = True,debug=True,server_name="0.0.0.0", server_port = 8001)  # server_name="0.0.0.0", server_port = 8001   # Ref: https://www.gradio.app/docs/interface
-
-# # Mount gradio interface object on FastAPI app at endpoint = '/'
-# app = gr.mount_gradio_app(app, iface, path="/")
+# Output response
+outputs = gr.Textbox(type="text", label='The Delivery time prediction is :',lines=3)
 
 
+# Gradio interface to generate UI link
+title = "Driver Delivery time Prediction"
+description = "Predict Driver Delivery time after provding the required features data"
+
+
+iface = gr.Interface(fn = predict_delivery_time,
+                         inputs = [ID,Delivery_person_ID,Delivery_person_Age,Delivery_person_Ratings,Restaurant_latitude,Restaurant_longitude,Delivery_location_latitude,Delivery_location_longitude,Order_Date,Time_Orderd,Time_Order_picked,Weatherconditions,Road_traffic_density,Vehicle_condition,Type_of_order,Type_of_vehicle,multiple_deliveries,Festival,City],
+                         outputs = [outputs],
+                         title = title,
+                         description = description,
+                         allow_flagging='never')
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 app.include_router(root_router)
@@ -134,6 +143,40 @@ if settings.BACKEND_CORS_ORIGINS:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+# # Define custom CSS for background image in the bottom-right corner
+# custom_css = """
+# body {
+#     position: relative;
+#     padding-bottom: 20px; /* Optional: Ensure content doesn't overlap the image */
+# }
+
+# background-image {
+#     background-image: url('https://image.freepik.com/free-vector/hand-drawn-food-delivery-man_23-2147678391.jpg'); /* Local file reference */
+#     position: fixed;
+#     bottom: 10px;
+#     right: 10px;
+#     width: 150px; /* Adjust width as needed */
+#     height: auto; /* Maintain aspect ratio */
+#     z-index: 1000; /* Ensure it appears above other elements */
+#     opacity: 0.8; /* Make it slightly transparent */
+# }
+# """
+
+# # Wrap the interface in Blocks for custom CSS
+# with gr.Blocks(css=custom_css) as app1:
+#     with gr.Row():
+#         iface.render()  # Render the existing interface
+#     # Add the background image using HTML
+#     gr.HTML("""
+#         <img id="background-image" src="https://image.freepik.com/free-vector/hand-drawn-food-delivery-man_23-2147678391.jpg" alt="Background Image" />
+#     """)
+    
+# Required only for gradio app launch
+# iface.launch(share = True,debug=True,server_name="0.0.0.0", server_port = 8001)  # server_name="0.0.0.0", server_port = 8001   # Ref: https://www.gradio.app/docs/interface
+
+# Mount gradio interface object on FastAPI app at endpoint = '/'
+app = gr.mount_gradio_app(app, iface, path="/")
 
 if __name__ == "__main__":
     # Use this for debugging purposes only

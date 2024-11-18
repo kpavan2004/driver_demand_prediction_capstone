@@ -6,7 +6,7 @@ sys.path.append(str(root))
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, r2_score,accuracy_score
+from sklearn.metrics import mean_squared_error, r2_score,accuracy_score,root_mean_squared_error,mean_absolute_percentage_error
 import mlflow
 import mlflow.sklearn
 
@@ -58,16 +58,18 @@ def run_training() -> None:
         mlflow.log_param("max_depth", config.ml_config.max_depth)
         mlflow.log_metric("r2_score", r2_score(y_test, y_pred))
         mlflow.log_metric("rmse", np.sqrt(mean_squared_error(y_test,y_pred)))
-
+        mlflow.log_metric("mse", mean_squared_error(y_test, y_pred))
+        mlflow.log_metric("mape", np.sqrt(mean_absolute_percentage_error(y_test,y_pred)))
         # Log the model
-        mlflow.sklearn.log_model(sk_model=demand_pipe,artifact_path="model",input_example=input_example,registered_model_name="demand_pipeline_model")
+        mlflow.sklearn.log_model(sk_model=demand_pipe,artifact_path="model",input_example=input_example,registered_model_name="delivery_time_model")
 
         print(f"Logged model with max_depth: ",r2_score(y_test, y_pred))
 
     # Calculate the score/error
     print("R2 score:", r2_score(y_test, y_pred))
     print("Mean squared error:", mean_squared_error(y_test, y_pred))
-    print(f"Root mean squared error:{np.sqrt(mean_squared_error(y_test,y_pred))}")
+    print(f"Root mean squared error:{np.sqrt(root_mean_squared_error(y_test,y_pred))}")
+    print("Mean Absolute Pecentage error:",mean_absolute_percentage_error(y_test,y_pred))
 
     # persist trained model
     save_pipeline(pipeline_to_persist = demand_pipe)

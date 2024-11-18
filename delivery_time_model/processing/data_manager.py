@@ -22,8 +22,8 @@ from delivery_time_model.config.core import DATASET_DIR, TRAINED_MODEL_DIR, conf
 def add_new_features(dataframe: pd.DataFrame):
 
     df = dataframe.copy()
-    print("start of add_new_features function")
-    print(df.iloc[0].to_dict())
+    # print("start of add_new_features function")
+    # print(df.iloc[0].to_dict())
     # convert 'dteday' column to Datetime datatype
     df["Order_Date_tmp"] = pd.to_datetime(df["Order_Date"], format='%d-%m-%Y')
     
@@ -34,9 +34,9 @@ def add_new_features(dataframe: pd.DataFrame):
     df['yr'] = df["Order_Date_tmp"].dt.year
     df['mnth'] = df["Order_Date_tmp"].dt.month_name()
     df.drop(['Order_Date_tmp'], axis=1, inplace=True)
-    print("From add_new_features functions")
+    # print("From add_new_features functions")
     # df["Order_Date"] = dataframe['Order_Date']
-    print(df.iloc[0].to_dict())
+    # print(df.iloc[0].to_dict())
     return df
 def calculate_picked_time(row):
     # Add a day offset if 'Time_Order_picked' is less than 'Time_Orderd'
@@ -47,10 +47,10 @@ def calculate_picked_time(row):
     
 def calculate_time_diff(dataframe: pd.DataFrame):
     
-    print("Inside calculate_time_diff function")
+    # print("Inside calculate_time_diff function")
     
     df = dataframe.copy()
-    print(df.iloc[0].to_dict())
+    # print(df.iloc[0].to_dict())
     # Ensure 'Order_Date' is in datetime format
     df['Order_Date'].head()
     df['Order_Date'] = pd.to_datetime(df['Order_Date'], format='%d-%m-%Y') # 
@@ -108,13 +108,13 @@ def data_munging(dataframe: pd.DataFrame):
     df = dataframe.copy()
     
     # Add new features city derived 
-    print("Inside data_munging")
-    print(df.iloc[0].to_dict())
+    # print("Inside data_munging")
+    # print(df.iloc[0].to_dict())
     
     # Handle Nan text values
     # data_frame = data_frame.apply(lambda x: x.str.lower().replace("nan",np.nan,regex = True) if x.dtype == "object" else x)
     
-    print("NUmber of null values in columns before tranformation",df.isna().sum())
+    # print("NUmber of null values in columns before tranformation",df.isna().sum())
     
     # df = df.apply(lambda x: x.str.lower().replace("nan",np.nan,regex = True) if x.dtype == "object" else x)
     df["Weatherconditions"] = df["Weatherconditions"].replace("nan", np.nan, regex=True).replace("NaN", np.nan, regex=True)
@@ -131,7 +131,7 @@ def data_munging(dataframe: pd.DataFrame):
     # Need to check below later
     # df = df.apply(lambda x: x.replace("nan",np.nan,regex = True) if x.dtype == "object" else x)
     
-    print("NUmber of null values in columns after converting string NaN/nan to np.nan tranformation",df.isna().sum())
+    # print("NUmber of null values in columns after converting string NaN/nan to np.nan tranformation",df.isna().sum())
     
     # For numeric columns use median as imputation for np.nan
     df["Delivery_person_Age"] = df["Delivery_person_Age"].fillna(df["Delivery_person_Age"].astype("float").median())
@@ -152,18 +152,18 @@ def data_munging(dataframe: pd.DataFrame):
     # print(df["Weatherconditions"].value_counts())
     
     
-    print("NUmber of null values in columns after tranformation",df.isna().sum())
+    # print("NUmber of null values in columns after tranformation",df.isna().sum())
     
     #Drop rows where restauratn lat and long are zero
     
     
-    print(df.iloc[0].to_dict())
+    # print(df.iloc[0].to_dict())
     return df
         
 def pre_pipeline_trans(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     
-    print('columns to the input of pre_pipeline_trans function')
-    print(data_frame.iloc[0].to_dict())
+    # print('columns to the input of pre_pipeline_trans function')
+    # print(data_frame.iloc[0].to_dict())
     
     #Derive order_prepare_time
     data_frame = calculate_time_diff(dataframe=data_frame)    
@@ -176,7 +176,7 @@ def pre_pipeline_trans(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     data_frame['Delivery_location_latitude'] = pd.to_numeric(data_frame['Delivery_location_latitude'], errors='coerce')
     data_frame['Delivery_location_longitude'] = pd.to_numeric(data_frame['Delivery_location_longitude'], errors='coerce')
     
-    print("Before Haversine")
+    # print("Before Haversine")
     #Calcuate the distance between Restaurant and Delivery location
     # loc_cols = ["Restaurant_latitude","Restaurant_longitude","Delivery_location_latitude","Delivery_location_longitude"]
     # distance = []
@@ -199,8 +199,8 @@ def pre_pipeline_trans(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     # Add the distances as a new column
     data_frame["Distance"] = distance
 
-    print("After Haversine")
-    print(data_frame.iloc[0].to_dict())
+    # print("After Haversine")
+    # print(data_frame.iloc[0].to_dict())
     
     # Issue while doing predction as it expects str
     data_frame[['Restaurant_latitude', 'Restaurant_longitude', 'Delivery_location_latitude', 'Delivery_location_longitude']] = data_frame[['Restaurant_latitude', 'Restaurant_longitude', 'Delivery_location_latitude', 'Delivery_location_longitude']].astype(str)
@@ -215,9 +215,9 @@ def pre_pipeline_trans(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     #Pre Pipeline data munging
     data_frame = data_munging(dataframe = data_frame)
         
-    print("*********************")
-    print(data_frame.iloc[0].to_dict())
-    print("*********************")
+    # print("*********************")
+    # print(data_frame.iloc[0].to_dict())
+    # print("*********************")
     # data_frame = get_city(dataframe = data_frame)
     
 	# Strip spaces from the object type  columns as there is space for NaN
@@ -225,7 +225,7 @@ def pre_pipeline_trans(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     #Replace Nan with float nan
 
        
-    print(data_frame.columns)
+    # print(data_frame.columns)
 	
 	# Remove (min) from the target column data and convert to float datatype
     # data_frame['Time_taken(min)'] = data_frame['Time_taken(min)'].str.replace(r'\(min\)', '', regex=True).astype(float)  # Ensure target variable is float
@@ -259,7 +259,7 @@ def pre_pipeline_preparation(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     #Pre Pipeline data munging
     data_frame = data_munging(dataframe = data_frame)
     
-    print("Before Haversine")
+    # print("Before Haversine")
     #Calcuate the distance between Restaurant and Delivery location
     loc_cols = ["Restaurant_latitude","Restaurant_longitude","Delivery_location_latitude","Delivery_location_longitude"]
     
@@ -274,14 +274,14 @@ def pre_pipeline_preparation(*, data_frame: pd.DataFrame) -> pd.DataFrame:
         location_list = [data_frame[loc_cols[j]][i] for j in range(len(loc_cols))]
         distance.append(haversine_distance(location_list))
     data_frame["Distance"] = distance
-    print("After Haversine")
-    print(data_frame.iloc[0].to_dict())
+    # print("After Haversine")
+    # print(data_frame.iloc[0].to_dict())
     
     # Issue while doing predction as it expects float
     data_frame[['Restaurant_latitude', 'Restaurant_longitude', 'Delivery_location_latitude', 'Delivery_location_longitude']] = data_frame[['Restaurant_latitude', 'Restaurant_longitude', 'Delivery_location_latitude', 'Delivery_location_longitude']].astype(str)
 
     
-    print(data_frame.columns)
+    # print(data_frame.columns)
 	
 	# Remove (min) from the target column data and convert to float datatype
     # data_frame['Time_taken(min)'] = data_frame['Time_taken(min)'].str.replace(r'\(min\)', '', regex=True).astype(float)  # Ensure target variable is float
@@ -302,8 +302,8 @@ def pre_pipeline_preparation(*, data_frame: pd.DataFrame) -> pd.DataFrame:
 
 def pre_pipeline_preparation_test(*, data_frame: pd.DataFrame) -> pd.DataFrame:
 
-    print("columns in pre pipeline prearation test:*********")
-    print(data_frame.columns)
+    # print("columns in pre pipeline prearation test:*********")
+    # print(data_frame.columns)
     # Strip spaces from the object type  columns
     data_frame = data_frame.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
     
@@ -320,7 +320,7 @@ def pre_pipeline_preparation_test(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     #Rename city and Time_taken columns
     data_frame.rename(columns = {"City":"City_area","Time_taken(min)":"Time_taken"},inplace=True)
     
-    print("Before Haversine")
+    # print("Before Haversine")
     #Calcuate the distance between Restaurant and Delivery location
     loc_cols = ["Restaurant_latitude","Restaurant_longitude","Delivery_location_latitude","Delivery_location_longitude"]
     
@@ -336,10 +336,10 @@ def pre_pipeline_preparation_test(*, data_frame: pd.DataFrame) -> pd.DataFrame:
         location_list = [data_frame[loc_cols[j]][i] for j in range(len(loc_cols))]
         distance.append(haversine_distance(location_list))
     data_frame["Distance"] = distance
-    print("After Haversine")
-    print(data_frame.iloc[0].to_dict())
+    # print("After Haversine")
+    # print(data_frame.iloc[0].to_dict())
     
-    print(data_frame.columns)
+    # print(data_frame.columns)
     
     #Handle 
     data_frame = data_munging(dataframe = data_frame)
@@ -351,18 +351,8 @@ def pre_pipeline_preparation_test(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     # Strip spaces from the object type
     data_frame = data_frame.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
     
-    #Derive city from delivery person id
-    # data_frame["City"] = data_frame["Delivery_person_ID"].str.split("RES").str[0].astype(str)
-    print("columns so far")
-    print(data_frame.columns)
-    # Create a list of fields to drop, excluding "nodrop"
-    # fields_to_drop = [field for field in config.ml_config.unused_fields if field != "Delivery_person_ID"]
-    # print("Fields to drop")
-    # print(fields_to_drop)
-
-    # Drop the fields from the data frame
-    # data_frame.drop(labels=fields_to_drop, axis=1, inplace=True)
-
+    # print("columns so far")
+    # print(data_frame.columns)
     return data_frame
 
 

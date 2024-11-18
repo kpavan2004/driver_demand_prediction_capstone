@@ -110,29 +110,29 @@ city_area_mappings:
   Metropolitian: 1
   Semi-Urban: 2
 
-# city_mappings:
-#   INDO: 0
-#   BANG: 1
-#   COIMB: 2
-#   CHEN: 3
-#   HYD: 4
-#   RANCHI: 5
-#   MYS: 6
-#   DEH: 7
-#   KOC: 8
-#   PUNE: 9
-#   LUDH: 10
-#   KNP: 11
-#   MUM: 12
-#   KOL: 13
-#   JAP: 14
-#   SUR: 15
-#   GOA: 16
-#   AURG: 17
-#   AGR: 18
-#   VAD: 19
-#   ALH: 20
-#   BHP: 21
+city_mappings:
+  INDO: 0
+  BANG: 1
+  COIMB: 2
+  CHEN: 3
+  HYD: 4
+  RANCHI: 5
+  MYS: 6
+  DEH: 7
+  KOC: 8
+  PUNE: 9
+  LUDH: 10
+  KNP: 11
+  MUM: 12
+  KOL: 13
+  JAP: 14
+  SUR: 15
+  GOA: 16
+  AURG: 17
+  AGR: 18
+  VAD: 19
+  ALH: 20
+  BHP: 21
 
 mnth_mappings:
   January: 0
