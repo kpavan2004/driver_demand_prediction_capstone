@@ -107,12 +107,26 @@ jobs:
       run: docker logout
 
   deploy:
-    runs-on: self-hosted
+    needs: [train, test, build, push-image]
+    runs-on: ubuntu-latest
     steps:
       - name: Pull Docker Image
         env: 
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
         run: sudo docker pull $DOCKER_USER/driver_delivery_time_pred-fastapi
+    
+      - name: Delete Old Docker Container
+        run: sudo docker rm -f app_container || true
+    
+      - name: Run Docker Container
+        env: 
+          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+        run: sudo docker run -it -d -p 8001:8001 --name app_cont $DOCKER_USER/driver_delivery_time_pred-fastapi
+  mlflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run the mlfow ui
+        run: sudo mlflow ui --port 5000
     
       - name: Delete Old Docker Container
         run: sudo docker rm -f app_container || true
