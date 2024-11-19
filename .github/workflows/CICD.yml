@@ -7,6 +7,7 @@ on:
   workflow_dispatch:
 jobs:
   train:
+    needs: mlflow
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -125,5 +126,7 @@ jobs:
   mlflow:
     runs-on: ubuntu-latest
     steps:
+      - name: Install mlfow dependencies
+        run: pip install mlflow
       - name: Run the mlfow ui
         run: sudo mlflow ui --port 5000
