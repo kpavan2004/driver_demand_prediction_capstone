@@ -129,4 +129,4 @@ jobs:
       - name: Install mlfow dependencies
         run: pip install mlflow
       - name: Run the mlfow ui
-        run: sudo mlflow ui --port 5000
+        run: mlflow ui --port 5000
