@@ -28,6 +28,7 @@ from sklearn.metrics import r2_score,accuracy_score, f1_score, precision_score, 
 import prometheus_client as prom
 from delivery_time_model import __version__ as ml_version
 from delivery_time_model.predict import make_prediction
+from delivery_time_model.config.core import CONFIG_FILE_PATH
 
 
 
@@ -85,7 +86,7 @@ def predict_delivery_time(ID,Delivery_person_ID,Delivery_person_Age,Delivery_per
     return pred_results['predictions'][0]
 
 # Load city values from the YAML file
-with open("/workspaces/driver_demand_prediction_capstone/delivery_time_model/config.yml", "r") as file:
+with open(CONFIG_FILE_PATH, "r") as file:
     config = yaml.safe_load(file)
     city_area_values = config["city_area_mappings"]
     Weatherconditions_values = config["weather_mappings"]
