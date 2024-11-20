@@ -33,6 +33,8 @@ class AppConfig(BaseModel):
     testing_data_file: str
     pipeline_name: str
     pipeline_save_file: str
+    registered_model_name: str
+    mlflow_tracking_uri: str
 
 
 class ModelConfig(BaseModel):

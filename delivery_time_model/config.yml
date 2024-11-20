@@ -160,3 +160,7 @@ random_state: 42
 
 n_estimators: 20
 max_depth: 9
+
+# mlflow tracking uri
+registered_model_name: delivery_time_model
+mlflow_tracking_uri: http://127.0.0.1:5000/
