@@ -8,8 +8,9 @@ scrape_configs:
 # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: "delivery_time_pred"
     metrics_path: '/api/v1/metrics'
-    scheme: 'https'
+    scheme: 'https' # For localhost it should be http
     scrape_interval: 20s # override default value
     scrape_timeout: 20s # override default value
     static_configs:
-      - targets: ["musical-rotary-phone-77r4x4g9px43r46x-8001.app.github.dev"] # The target here it's Prometheus itself.
+      - targets: ["musical-rotary-phone-77r4x4g9px43r46x-8001.app.github.dev"] # 192.168.1.19 for localhost
+      
