@@ -1,6 +1,14 @@
 1.Train the model
 Mlflow server should be launched first using : and then change port visibility from private to public
-     mlflow ui --port 5000
+     a)if running locally then export RE_TRAIN='Yes
+     mlflow ui --port 5000 :- Runs on localhost
+
+    b)Launch codespace and install boto3 and mlflow, export variables, create s3 bukcet and folder and 
+     If artefacts target is s3: then export the varables 
+     export AWS_ACCESS_KEY_ID=''
+     export AWS_SECRET_ACCESS_KEY=''
+     export AWS_DEFAULT_REGION='ap-south-1'
+     mlflow ui --port 5000 --artifacts-destination s3://pk-capstone-bucket-01/MLflow-data/
 cd /delivery_time_model
 python train_pipeline.py
 
@@ -8,8 +16,8 @@ python train_pipeline.py
 python predict.py
 
 3.tests:
-cd /tests/app/
-python main.py
+cd /tests/
+pytest -s test_predictions.py
 
 4.create the .whl file and .pkl file
 python -m build 

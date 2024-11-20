@@ -7,6 +7,8 @@ on:
   workflow_dispatch:
 jobs:
   train:
+    env:
+      RE_TRAIN: Yes      # Re-train 'Yes' / 'No'?
     needs: mlflow
     runs-on: ubuntu-latest
     strategy:

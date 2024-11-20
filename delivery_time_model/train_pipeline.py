@@ -28,7 +28,7 @@ def run_training() -> None:
     
     # Set an experiment name, unique and case-sensitive
     # It will create a new experiment if the experiment with given doesn't exist
-    exp = mlflow.set_experiment(experiment_name = "Driver-Delivery-Time-Prediction")
+    exp = mlflow.set_experiment(experiment_name = "Driver-Delivery-Time-Prediction-New1")
     
     # read training data
     data = load_dataset(file_name = config.app_config.training_data_file)
@@ -74,10 +74,7 @@ def run_training() -> None:
     print("Mean squared error:", mean_squared_error(y_test, y_pred))
     print(f"Root mean squared error:{np.sqrt(mean_squared_error(y_test,y_pred))}")
     print("Mean Absolute Pecentage error:",mean_absolute_percentage_error(y_test,y_pred))
-
-    # persist trained model
-    save_pipeline(pipeline_to_persist = demand_pipe)
-    
+   
     # Load current 'production' model via 'models'
     import mlflow.pyfunc
     model_name = config.app_config.registered_model_name         #"sklearn-titanic-rf-model"
@@ -117,8 +114,7 @@ def run_training() -> None:
     # Register new model/version of model
     mlflow.sklearn.log_model(sk_model = demand_pipe, 
                             artifact_path="trained_model",
-                            registered_model_name=model_name,
-                            input_example=input_example
+                            registered_model_name=model_name
                             )
     # Add 'last-trained' alias to this new model version
     client.set_registered_model_alias(name=model_name, alias="last-trained", version=str(new_version))
@@ -135,6 +131,8 @@ def run_training() -> None:
     # End an active MLflow run
     mlflow.end_run()
        
+    # persist trained model
+    save_pipeline(pipeline_to_persist = demand_pipe)
     
 if __name__ == "__main__":
     print("Re-training:", os.environ['RE_TRAIN'])

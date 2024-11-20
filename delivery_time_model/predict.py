@@ -14,10 +14,24 @@ from delivery_time_model.processing.data_manager import load_pipeline
 from delivery_time_model.processing.data_manager import pre_pipeline_preparation
 from delivery_time_model.processing.validation import validate_inputs
 
+#################### MLflow CODE START to load 'production' model #############################
+import mlflow 
+import mlflow.pyfunc
+mlflow.set_tracking_uri(config.app_config.mlflow_tracking_uri)
 
-pipeline_file_name = f"{config.app_config.pipeline_save_file}{_version}.pkl"
-demand_pipe = load_pipeline(file_name = pipeline_file_name)
+# Create MLflow client
+client = mlflow.tracking.MlflowClient()
 
+# Load model via 'models'
+model_name = config.app_config.registered_model_name              #"sklearn-titanic-rf-model"
+model_info = client.get_model_version_by_alias(name=model_name, alias="production")
+print(f'Model version fetched: {model_info.version}')
+
+demand_pipe = mlflow.pyfunc.load_model(model_uri=f"models:/{model_name}@production")
+#################### MLflow CODE END ##########################################################
+
+# pipeline_file_name = f"{config.app_config.pipeline_save_file}{_version}.pkl"
+# demand_pipe = load_pipeline(file_name = pipeline_file_name)
 
 def make_prediction(*, input_data: Union[pd.DataFrame, dict]) -> dict:
     """Make a prediction using a saved model """
@@ -27,7 +41,9 @@ def make_prediction(*, input_data: Union[pd.DataFrame, dict]) -> dict:
     # input_df = pd.DataFrame(input_data)
     # input_df = input_df[-((input_df["Restaurant_latitude"]==0.0) & (input_df["Restaurant_longitude"]==0.0)) ]
     # print(input_df.shape)
+    print("Before validate_inputs ")
     validated_data, errors = validate_inputs(input_df = pd.DataFrame(input_data))
+    print("After validate_inputs ")
     # print("after calling validate_inputs function")
     # print(validated_data.columns)
     # print(validated_data.head(1))
@@ -39,7 +55,8 @@ def make_prediction(*, input_data: Union[pd.DataFrame, dict]) -> dict:
     # print(validated_data.iloc[0].to_dict())
     
     results = {"predictions": None, "version": _version, "errors": errors}
-      
+    print("The predictions results are :")  
+    print(results)
     if not errors:
         # print("inside if statement")
         predictions = demand_pipe.predict(validated_data)
