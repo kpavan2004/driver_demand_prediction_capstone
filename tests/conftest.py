@@ -13,9 +13,10 @@ from delivery_time_model.processing.data_manager import load_dataset_test1
 
 @pytest.fixture
 def sample_input_data():
+    # print("inside sample input data")
     data = load_dataset_test1(file_name = config.app_config.training_data_file)
-    print("Output of load_dataset_test columns:")
-    print(data.columns)
+    # print("Output of load_dataset_test columns:")
+    # print(data.columns)
     
     # data = data.head(1)
     
@@ -42,7 +43,7 @@ def sample_input_data():
     # Exclude the 'Label' column
     # df_without_label = data.drop(columns=[config.ml_config.target],axis=1)
     features = config.ml_config.features.copy()
-    print(features)
+    # print(features)
     add_cols = ["Delivery_person_ID","Order_Date","Time_Orderd","Time_Order_picked"]
     for value in add_cols:
         features.append(value)
