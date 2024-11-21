@@ -355,23 +355,36 @@ def pre_pipeline_preparation_test(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     # print(data_frame.columns)
     return data_frame
 
+def read_data_file():
+    import os
+    import dvc.api
+    import pandas as pd
+    repo = 'https://' + os.environ['GH_USERNAME'] + ':' + os.environ['GH_ACCESS_TOKEN'] + '@github.com/kpavan2004/dvc-driver-demand-capstone'
+    data_revision = os.environ['DATA_VERSION']
+    remote_config = {
+        'access_key_id': os.environ["AWS_ACCESS_KEY_ID"],
+        'secret_access_key': os.environ["AWS_SECRET_ACCESS_KEY"],
+    }
+    with dvc.api.open('data/train.csv', repo=repo, rev=data_revision, remote_config=remote_config) as file:
+        df = pd.read_csv(file)
+    return df
 
 def _load_raw_dataset(*, file_name: str) -> pd.DataFrame:
     dataframe = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
     return dataframe
 
 def load_dataset(*, file_name: str) -> pd.DataFrame:
-    dataframe = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
+    dataframe = read_data_file()  # pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
     transformed = pre_pipeline_preparation(data_frame = dataframe)
     return transformed
 
 def load_dataset_test(*, file_name: str) -> pd.DataFrame:
-    dataframe = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
+    dataframe = read_data_file() # pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
     transformed = pre_pipeline_trans(data_frame = dataframe)
     return transformed
 
 def load_dataset_test1(*, file_name: str) -> pd.DataFrame:
-    dataframe = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
+    dataframe = read_data_file()  #pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
     transformed = pre_pipeline_preparation_test(data_frame = dataframe)
     print(transformed.columns)
     return transformed
