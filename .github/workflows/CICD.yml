@@ -3,13 +3,12 @@ name: CI CD Pipeline
 on:
   push:
     branches:
-      - main
+      - master
   workflow_dispatch:
 jobs:
   train:
     env:
       RE_TRAIN: Yes      # Re-train 'Yes' / 'No'?
-    needs: mlflow
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -22,6 +21,12 @@ jobs:
     - name: Install app dependencies
       run: pip install -r requirements/requirements.txt
     - name: Train and save pipeline
+      env:
+        DATA_VERSION: v1.1
+        GH_USERNAME: ${{ secrets.GH_USERNAME }}
+        GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: python delivery_time_model/train_pipeline.py
     - uses: actions/upload-artifact@v3
       with:
@@ -119,10 +124,3 @@ jobs:
         env: 
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
         run: sudo docker run -it -d -p 8001:8001 --name app_cont $DOCKER_USER/driver_delivery_time_pred-fastapi
-  mlflow:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install mlfow dependencies
-        run: pip install mlflow
-      - name: Run the mlfow ui
-        run: mlflow ui --host 0.0.0.0 --port 5000
