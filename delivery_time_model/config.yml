@@ -163,4 +163,4 @@ max_depth: 9
 
 # mlflow tracking uri
 registered_model_name: delivery_time_model
-mlflow_tracking_uri: http://localhost:5000/
+mlflow_tracking_uri: https://congenial-palm-tree-vpg757xvr9vfww5j-5000.app.github.dev/
