@@ -12,5 +12,5 @@ scrape_configs:
     scrape_interval: 20s # override default value
     scrape_timeout: 20s # override default value
     static_configs:
-      - targets: ["musical-rotary-phone-77r4x4g9px43r46x-8001.app.github.dev"] # 192.168.1.19 for localhost
+      - targets: ["opulent-succotash-wv9j4jw75jjf9r95-8001.app.github.dev"] # 192.168.1.19 for localhost
       
