@@ -51,6 +51,12 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements/test_requirements.txt
     - name: Test with pytest
+      env:
+        DATA_VERSION: v1.1
+        GH_USERNAME: ${{ secrets.GH_USERNAME }}
+        GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: pytest
 
   build:
@@ -71,6 +77,12 @@ jobs:
     - name: Install dependencies
       run: pip install --upgrade build
     - name: Build package
+      env:
+        DATA_VERSION: v1.1
+        GH_USERNAME: ${{ secrets.GH_USERNAME }}
+        GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: python -m build
     - uses: actions/upload-artifact@v3
       with:
