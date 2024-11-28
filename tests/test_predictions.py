@@ -12,7 +12,7 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_squared_error
 
 from delivery_time_model.predict import make_prediction
 
-
+print("Before calling test_make_prediction")
 def test_make_prediction(sample_input_data):
     # Given
     expected_num_of_predictions = 9119

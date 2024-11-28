@@ -15,31 +15,21 @@ spec:
     spec:
       containers:
       - name: grafana
-        image: grafana/grafana-oss
+        image: grafana/grafana:latest # Specify the container image
         ports:
         - containerPort: 3000
         volumeMounts:
         - name: grafana-data
           mountPath: /var/lib/grafana
         envFrom:
-        - configMapRef:
-            name: grafana-env
+          - secretRef:
+              name: myapp-secret  # Reference the Secret here
       volumes:
       - name: grafana-data
         emptyDir: {}  # Replace with PersistentVolumeClaim for persistent storage
-
----
-
-# ConfigMap for Environment Variables
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: grafana-env
-data:
-  # These are example environment variables
-  GF_SECURITY_ADMIN_USER: admin
-  GF_SECURITY_ADMIN_PASSWORD: admin
-  GF_USERS_ALLOW_SIGN_UP: "false"
+        # hostPath:
+          # path: "C:/IISC_AI_and_MLOps/course_materials/Capstone_Project/temp_cp_git/temp_cp/Grafana"
+          # type: DirectoryOrCreate
 
 ---
 
