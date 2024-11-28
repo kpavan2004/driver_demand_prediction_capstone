@@ -60,12 +60,14 @@ docker run -it -d -p 8001:8001 --name=app_cont kpavan2004/driver_delivery_time_p
 ```
 Note to change port visibility from private to public incase of github codespace
 
-## From the Prometheus directory, run the below command to start Prometheus and then change port visibility from private to public
+## Prometheus
 ```bash
 docker run -it -d -p 9090:9090 -u root -v "$PWD/prometheus.yml:/etc/prometheus/prometheus.yml" -v "$PWD/prometheus-data:/prometheus" --name=prom_cont prom/prometheus
 ```
+Note to change port visibility from private to public incase of github codespace
 
-## Go to Grafana directory, run the below command to start grafana and then change port visibility from private to public
+## Grafana
 ```bash
 docker run -it -d -p 3000:3000 -u root -v "$PWD/grafana-data:/var/lib/grafana" --env-file "$PWD/env.list" --name=grafana_cont grafana/grafana-oss
 ```
+Note to change port visibility from private to public incase of github codespace
