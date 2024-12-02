@@ -57,7 +57,6 @@ async def predict(input_data: schemas.MultipleDataInputs_api) -> Any:
 
     return results
 
-# acc_metric = prom.Gauge('delivery_time_accuracy_score', 'Accuracy score for few random 100 test samples')
 rmse_metric = prom.Gauge('delivery_time_rmse', 'Root mean square error for few random test samples')
 r2_metric = prom.Gauge('delivery_time_r2_score', 'R2 score for random test samples')
 

@@ -106,33 +106,15 @@ def rename_label(dataframe: pd.DataFrame):
 
 def data_munging(dataframe: pd.DataFrame):
     df = dataframe.copy()
-    
-    # Add new features city derived 
-    # print("Inside data_munging")
-    # print(df.iloc[0].to_dict())
-    
+       
     # Handle Nan text values
-    # data_frame = data_frame.apply(lambda x: x.str.lower().replace("nan",np.nan,regex = True) if x.dtype == "object" else x)
-    
-    # print("NUmber of null values in columns before tranformation",df.isna().sum())
-    
-    # df = df.apply(lambda x: x.str.lower().replace("nan",np.nan,regex = True) if x.dtype == "object" else x)
     df["Weatherconditions"] = df["Weatherconditions"].replace("nan", np.nan, regex=True).replace("NaN", np.nan, regex=True)
     df["Road_traffic_density"] = df["Road_traffic_density"].replace("nan", np.nan, regex=True).replace("NaN", np.nan, regex=True)
     df["Festival"] = df["Festival"].replace("nan", np.nan, regex=True).replace("NaN", np.nan, regex=True)
     df["City_area"] = df["City_area"].replace("nan", np.nan, regex=True).replace("NaN", np.nan, regex=True)
     df["Delivery_person_Age"] = df["Delivery_person_Age"].replace("nan", np.nan, regex=True).replace("NaN", np.nan, regex=True)
     df["Delivery_person_Ratings"] = df["Delivery_person_Ratings"].replace("nan", np.nan, regex=True).replace("NaN", np.nan, regex=True)
-    
-    # cols = ["Weatherconditions","Road_traffic_density","City_area","Festival","Delivery_person_Age","Delivery_person_Ratings"]
-    # for col in cols:
-    #     df[col].replace("nan", np.nan, regex=True).replace("NaN", np.nan, regex=True)
-        
-    # Need to check below later
-    # df = df.apply(lambda x: x.replace("nan",np.nan,regex = True) if x.dtype == "object" else x)
-    
-    # print("NUmber of null values in columns after converting string NaN/nan to np.nan tranformation",df.isna().sum())
-    
+
     # For numeric columns use median as imputation for np.nan
     df["Delivery_person_Age"] = df["Delivery_person_Age"].fillna(df["Delivery_person_Age"].astype("float").median())
     median_rating = df["Delivery_person_Ratings"].astype("float").median()
@@ -149,22 +131,11 @@ def data_munging(dataframe: pd.DataFrame):
     
     # Removing condition word from the data
     df["Weatherconditions"] = df["Weatherconditions"].str.split(" ").str[-1]
-    # print(df["Weatherconditions"].value_counts())
-    
-    
-    # print("NUmber of null values in columns after tranformation",df.isna().sum())
-    
-    #Drop rows where restauratn lat and long are zero
-    
-    
-    # print(df.iloc[0].to_dict())
+
     return df
         
 def pre_pipeline_trans(*, data_frame: pd.DataFrame) -> pd.DataFrame:
-    
-    # print('columns to the input of pre_pipeline_trans function')
-    # print(data_frame.iloc[0].to_dict())
-    
+       
     #Derive order_prepare_time
     data_frame = calculate_time_diff(dataframe=data_frame)    
     
@@ -175,15 +146,6 @@ def pre_pipeline_trans(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     data_frame['Restaurant_longitude'] = pd.to_numeric(data_frame['Restaurant_longitude'], errors='coerce')
     data_frame['Delivery_location_latitude'] = pd.to_numeric(data_frame['Delivery_location_latitude'], errors='coerce')
     data_frame['Delivery_location_longitude'] = pd.to_numeric(data_frame['Delivery_location_longitude'], errors='coerce')
-    
-    # print("Before Haversine")
-    #Calcuate the distance between Restaurant and Delivery location
-    # loc_cols = ["Restaurant_latitude","Restaurant_longitude","Delivery_location_latitude","Delivery_location_longitude"]
-    # distance = []
-    # for i in range(len(data_frame[loc_cols[0]])):
-    #     location_list = [data_frame[loc_cols[j]][i] for j in range(len(loc_cols))]
-    #     distance.append(haversine_distance(location_list))
-    # data_frame["Distance"] = distance
     
     loc_cols = ["Restaurant_latitude", "Restaurant_longitude", "Delivery_location_latitude", "Delivery_location_longitude"]
     distance = []
@@ -198,10 +160,7 @@ def pre_pipeline_trans(*, data_frame: pd.DataFrame) -> pd.DataFrame:
 
     # Add the distances as a new column
     data_frame["Distance"] = distance
-
-    # print("After Haversine")
-    # print(data_frame.iloc[0].to_dict())
-    
+   
     # Issue while doing predction as it expects str
     data_frame[['Restaurant_latitude', 'Restaurant_longitude', 'Delivery_location_latitude', 'Delivery_location_longitude']] = data_frame[['Restaurant_latitude', 'Restaurant_longitude', 'Delivery_location_latitude', 'Delivery_location_longitude']].astype(str)
     
@@ -214,26 +173,10 @@ def pre_pipeline_trans(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     
     #Pre Pipeline data munging
     data_frame = data_munging(dataframe = data_frame)
-        
-    # print("*********************")
-    # print(data_frame.iloc[0].to_dict())
-    # print("*********************")
-    # data_frame = get_city(dataframe = data_frame)
-    
+
 	# Strip spaces from the object type  columns as there is space for NaN
     data_frame = data_frame.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
-    #Replace Nan with float nan
 
-       
-    # print(data_frame.columns)
-	
-	# Remove (min) from the target column data and convert to float datatype
-    # data_frame['Time_taken(min)'] = data_frame['Time_taken(min)'].str.replace(r'\(min\)', '', regex=True).astype(float)  # Ensure target variable is float
-    # data_frame['Time_taken'] = data_frame['Time_taken'].str.replace(r'\(min\)', '', regex=True).astype(float)  # Ensure target variable is float
-    
-    #Derive city from delivery person id
-    # data_frame["City"] = data_frame["Delivery_person_ID"].str.split("RES").str[0].astype(str)
-    
     # Drop unnecessary fields
     for field in config.ml_config.unused_fields:
         if field in data_frame.columns:
@@ -250,8 +193,6 @@ def pre_pipeline_preparation(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     data_frame = calculate_time_diff(dataframe=data_frame)    
     
     data_frame = add_new_features(dataframe=data_frame)
-       
-    # data_frame = rename_label(dataframe = data_frame )
     
     #Rename city and Time_taken columns
     data_frame.rename(columns = {"City":"City_area","Time_taken(min)":"Time_taken"},inplace=True)
@@ -259,7 +200,6 @@ def pre_pipeline_preparation(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     #Pre Pipeline data munging
     data_frame = data_munging(dataframe = data_frame)
     
-    # print("Before Haversine")
     #Calcuate the distance between Restaurant and Delivery location
     loc_cols = ["Restaurant_latitude","Restaurant_longitude","Delivery_location_latitude","Delivery_location_longitude"]
     
@@ -274,24 +214,14 @@ def pre_pipeline_preparation(*, data_frame: pd.DataFrame) -> pd.DataFrame:
         location_list = [data_frame[loc_cols[j]][i] for j in range(len(loc_cols))]
         distance.append(haversine_distance(location_list))
     data_frame["Distance"] = distance
-    # print("After Haversine")
-    # print(data_frame.iloc[0].to_dict())
     
     # Issue while doing predction as it expects float
     data_frame[['Restaurant_latitude', 'Restaurant_longitude', 'Delivery_location_latitude', 'Delivery_location_longitude']] = data_frame[['Restaurant_latitude', 'Restaurant_longitude', 'Delivery_location_latitude', 'Delivery_location_longitude']].astype(str)
 
-    
-    # print(data_frame.columns)
-	
-	# Remove (min) from the target column data and convert to float datatype
-    # data_frame['Time_taken(min)'] = data_frame['Time_taken(min)'].str.replace(r'\(min\)', '', regex=True).astype(float)  # Ensure target variable is float
     data_frame['Time_taken'] = data_frame['Time_taken'].str.replace(r'\(min\)', '', regex=True).astype(float)  # Ensure target variable is float
     
     # Strip spaces from the object type  columns
     data_frame = data_frame.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
-    
-    #Derive city from delivery person id
-    # data_frame["City"] = data_frame["Delivery_person_ID"].str.split("RES").str[0].astype(str)
     
     # Drop unnecessary fields
     for field in config.ml_config.unused_fields:
@@ -302,8 +232,6 @@ def pre_pipeline_preparation(*, data_frame: pd.DataFrame) -> pd.DataFrame:
 
 def pre_pipeline_preparation_test(*, data_frame: pd.DataFrame) -> pd.DataFrame:
 
-    # print("columns in pre pipeline prearation test:*********")
-    # print(data_frame.columns)
     # Strip spaces from the object type  columns
     data_frame = data_frame.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
     
@@ -312,15 +240,9 @@ def pre_pipeline_preparation_test(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     
     data_frame = add_new_features(dataframe=data_frame)
     
-    # data_frame = rename_label(dataframe = data_frame )
-    
-    # Strip spaces from the object type
-    # data_frame = data_frame.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
-    
     #Rename city and Time_taken columns
     data_frame.rename(columns = {"City":"City_area","Time_taken(min)":"Time_taken"},inplace=True)
     
-    # print("Before Haversine")
     #Calcuate the distance between Restaurant and Delivery location
     loc_cols = ["Restaurant_latitude","Restaurant_longitude","Delivery_location_latitude","Delivery_location_longitude"]
     
@@ -329,30 +251,22 @@ def pre_pipeline_preparation_test(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     data_frame['Restaurant_longitude'] = pd.to_numeric(data_frame['Restaurant_longitude'], errors='coerce')
     data_frame['Delivery_location_latitude'] = pd.to_numeric(data_frame['Delivery_location_latitude'], errors='coerce')
     data_frame['Delivery_location_longitude'] = pd.to_numeric(data_frame['Delivery_location_longitude'], errors='coerce')
-
     
     distance = []
     for i in range(len(data_frame[loc_cols[0]])):
         location_list = [data_frame[loc_cols[j]][i] for j in range(len(loc_cols))]
         distance.append(haversine_distance(location_list))
     data_frame["Distance"] = distance
-    # print("After Haversine")
-    # print(data_frame.iloc[0].to_dict())
-    
-    # print(data_frame.columns)
-    
+
     #Handle 
     data_frame = data_munging(dataframe = data_frame)
 	
 	# Remove (min) from the target column data and convert to float datatype
-    # data_frame['Time_taken(min)'] = data_frame['Time_taken(min)'].str.replace(r'\(min\)', '', regex=True).astype(float)  # Ensure target variable is float
     data_frame['Time_taken'] = data_frame['Time_taken'].str.replace(r'\(min\)', '', regex=True).astype(float)  # Ensure target variable is float
     
     # Strip spaces from the object type
     data_frame = data_frame.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
     print("End of pipeline preprocess function")
-    # print("columns so far")
-    # print(data_frame.columns)
     return data_frame
 
 def read_data_file():
@@ -373,12 +287,6 @@ def read_data_file():
     except Exception as e:
         print(f"Error occurred while reading dvc training data: {e}")
         raise
-    # finally:
-    #     # dvc.api.
-    #     import boto3
-    #     session = boto3.Session()
-    #     print("Active sessions:", session.get_available_resources())
-    #     # session.close()
 
 def _load_raw_dataset(*, file_name: str) -> pd.DataFrame:
     dataframe = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
@@ -396,9 +304,8 @@ def load_dataset_test(*, file_name: str) -> pd.DataFrame:
 
 def load_dataset_test1(*, file_name: str) -> pd.DataFrame:
     dataframe = read_data_file()  #pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
-    # dataframe = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
     transformed = pre_pipeline_preparation_test(data_frame = dataframe)
-    print(transformed.columns)
+    # transformed = pre_pipeline_preparation(data_frame = dataframe)
     return transformed
 
 def save_pipeline(*, pipeline_to_persist: Pipeline) -> None:

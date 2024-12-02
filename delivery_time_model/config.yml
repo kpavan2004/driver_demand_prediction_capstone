@@ -75,13 +75,6 @@ weather_mappings:
   Cloudy: 3
   Fog: 4
   Windy: 5
-  # conditions Sunny: 0
-  # conditions Stormy: 1
-  # conditions Sandstorms: 2
-  # conditions Cloudy: 3
-  # conditions Fog: 4
-  # conditions Windy: 5
-  # conditions NaN: 6
 
 traff_den_mappings:
   High: 0
@@ -155,9 +148,6 @@ test_size: 0.20
 random_state: 42
 
 # Alogrithm parameters
-# n_estimators: 100
-# max_depth: 10
-
 n_estimators: 20
 max_depth: 9
 

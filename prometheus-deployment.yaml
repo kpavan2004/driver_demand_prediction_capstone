@@ -48,6 +48,8 @@ spec:
         configMap:
           name: prometheus-config
       - name: prometheus-data
+        # persistentVolumeClaim:
+        #   claimName: prometheus-pvc
         emptyDir: {}  # Replace with PersistentVolumeClaim for persistent storage
 
 ---
