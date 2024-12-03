@@ -153,4 +153,4 @@ max_depth: 9
 
 # mlflow tracking uri
 registered_model_name: delivery_time_model
-mlflow_tracking_uri: http://192.168.1.19:5000 
+mlflow_tracking_uri: https://fuzzy-guacamole-77r4x4g9544hxprw-5000.app.github.dev 
