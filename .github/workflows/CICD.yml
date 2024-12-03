@@ -98,24 +98,29 @@ jobs:
     - name: Build the Docker image for Fastapi app
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-      run: docker build . -f Dockerfile -t $DOCKER_USER/driver_delivery_time_pred-fastapi:latest
+      run: docker build . -f Dockerfile -t $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv:latest
 
     - name: Push the Docker Image
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-      run: docker push $DOCKER_USER/driver_delivery_time_pred-fastapi
+      run: docker push $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv
 
     - name: Logout to Docker hub
       run: docker logout
 
   deploy:
     needs: [train, test, build, push-image]
-    runs-on: self-hosted
+    runs-on: ec2
     steps:
       - name: Pull Docker Image
         env: 
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-        run: sudo docker pull $DOCKER_USER/driver_delivery_time_pred-fastapi
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          GH_USERNAME: ${{ secrets.GH_USERNAME }}
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+        run: sudo docker pull $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv
     
       - name: Delete Old Docker Container
         run: sudo docker rm -f app_container || true
@@ -123,4 +128,4 @@ jobs:
       - name: Run Docker Container
         env: 
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-        run: sudo docker run -it -d -p 8001:8001 --name app_cont $DOCKER_USER/driver_delivery_time_pred-fastapi
+        run: sudo docker run -it -d -p 8001:8001 --name app_cont $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv
