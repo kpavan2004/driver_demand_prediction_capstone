@@ -15,7 +15,7 @@ jobs:
         run: sudo docker pull $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv
     
       - name: Delete Old Docker Container
-        run: sudo docker rm -f app_container || true
+        run: sudo docker rm -f app_cont || true
     
       - name: Run Docker Container
         env: 
