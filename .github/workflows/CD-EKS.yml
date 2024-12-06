@@ -26,4 +26,4 @@ jobs:
           GH_USERNAME: ${{ secrets.GH_USERNAME }}
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           DATA_VERSION: ${{ secrets.DATA_VERSION }}
-        run: sudo kubectl apply -f myapp-deployment.yaml
+        run: kubectl apply -f myapp-deployment.yaml
