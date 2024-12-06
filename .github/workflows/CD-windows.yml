@@ -10,14 +10,17 @@ jobs:
     runs-on: mypc
     steps:
       - name: Pull Docker Image
+        shell: powershell
         env: 
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
         run: docker pull %DOCKER_USER%/driver_delivery_time_pred-fastapi_noenv
     
       - name: Delete Old Docker Container
+        shell: powershell
         run: docker rm -f app_cont || true
     
       - name: Run Docker Container
+        shell: powershell
         env: 
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
