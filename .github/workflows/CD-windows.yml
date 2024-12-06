@@ -13,9 +13,7 @@ jobs:
         shell: powershell
         env: 
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-        run: |
-          $env:DOCKER_USER_LOWER = $env:DOCKER_USER.ToLower()
-          Write-Host "DOCKER_USER_LOWER is: $env:DOCKER_USER_LOWER"
+        run: docker pull "$env:DOCKER_USER/driver_delivery_time_pred-fastapi_noenv"
     
       - name: Delete Old Docker Container
         shell: powershell
