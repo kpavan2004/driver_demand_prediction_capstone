@@ -1,0 +1,48 @@
+name: CD-EKS Pipeline
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ec2
+    steps:
+      - name: Pull Docker Image
+        env: 
+          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+        run: sudo docker pull $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv
+    
+      - name: Delete Old Docker Container
+        run: sudo docker rm -f app_cont || true
+    
+      - name: Create Kubernetes secret
+        env: 
+          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          GH_USERNAME: ${{ secrets.GH_USERNAME }}
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          DATA_VERSION: ${{ secrets.DATA_VERSION }}
+        run: sudo kubectl create secret generic myapp-secret \
+             --from-literal=AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+             --from-literal=AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+             --from-literal=AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION \
+             --from-literal=GH_USERNAME=$GH_USERNAME \
+             --from-literal=GH_ACCESS_TOKEN=$GH_ACCESS_TOKEN \
+             --from-literal=DATA_VERSION=$DATA_VERSION \
+             --from-literal=DOCKER_USER=$DOCKER_USER \
+             --namespace my-namespace \
+             --dry-run=client -o yaml | kubectl apply -f -
+      - name: Run Kubernetes manifest file
+        env: 
+          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          GH_USERNAME: ${{ secrets.GH_USERNAME }}
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          DATA_VERSION: ${{ secrets.DATA_VERSION }}
+        run: sudo kubectl apply -f myapp-deployment.yaml
