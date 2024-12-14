@@ -103,29 +103,29 @@ city_area_mappings:
   Metropolitian: 1
   Semi-Urban: 2
 
-city_mappings:
-  INDO: 0
-  BANG: 1
-  COIMB: 2
-  CHEN: 3
-  HYD: 4
-  RANCHI: 5
-  MYS: 6
-  DEH: 7
-  KOC: 8
-  PUNE: 9
-  LUDH: 10
-  KNP: 11
-  MUM: 12
-  KOL: 13
-  JAP: 14
-  SUR: 15
-  GOA: 16
-  AURG: 17
-  AGR: 18
-  VAD: 19
-  ALH: 20
-  BHP: 21
+# city_mappings:
+#   INDO: 0
+#   BANG: 1
+#   COIMB: 2
+#   CHEN: 3
+#   HYD: 4
+#   RANCHI: 5
+#   MYS: 6
+#   DEH: 7
+#   KOC: 8
+#   PUNE: 9
+#   LUDH: 10
+#   KNP: 11
+#   MUM: 12
+#   KOL: 13
+#   JAP: 14
+#   SUR: 15
+#   GOA: 16
+#   AURG: 17
+#   AGR: 18
+#   VAD: 19
+#   ALH: 20
+#   BHP: 21
 
 mnth_mappings:
   January: 0
@@ -148,8 +148,17 @@ test_size: 0.20
 random_state: 42
 
 # Alogrithm parameters
-n_estimators: 20
-max_depth: 9
+# n_estimators: 50
+# max_depth: 9
+# learning_rate: 0.1
+# min_child_weight: 0.8
+# subsample: 0.8
+
+# n_estimators: 425
+# max_depth: 9
+# learning_rate: 0.011
+# subsample: 0.611
+# colsample_bytree: 0.965
 
 # mlflow tracking uri
 registered_model_name: delivery_time_model

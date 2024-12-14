@@ -42,5 +42,5 @@ def test_make_prediction(sample_input_data):
     print("r2 score:", r2)
     print("mse :", mse)
     print("rmse :", rmse)
-    # assert r2 > 0.8
+    assert r2 > 0.7
     # assert mse < 3000.0

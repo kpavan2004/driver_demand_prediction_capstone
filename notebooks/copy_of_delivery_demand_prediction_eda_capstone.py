@@ -822,11 +822,12 @@ mlflow.log_metric("mape", np.sqrt(mean_absolute_percentage_error(y_test,y_pred_r
 # End an active MLflow run
 mlflow.end_run()
 
-
+"""
 ## Tuning Xgboost regressor using hyperopt
 
 
 ## Optuna model-1
+exp = mlflow.set_experiment(experiment_name = "Driver-Delivery-Time-Prediction")
 
 mlflow.start_run(experiment_id= exp.experiment_id, run_name= "XGBRegressor-Optuna-1")
 
@@ -836,14 +837,10 @@ def objective(trial):
         'verbosity': 0,
         'objective': 'reg:squarederror',
         'max_depth': trial.suggest_int('max_depth', 3, 15),
-        'n_estimators': trial.suggest_int('n_estimators', 100, 500),
+        'n_estimators': trial.suggest_int('n_estimators',100, 500),
         'learning_rate': trial.suggest_float('learning_rate',0.001, 0.2),
         'subsample': trial.suggest_float('subsample', 0.6, 1.0),
         'colsample_bytree': trial.suggest_float('colsample_bytree', 0.6, 1.0),
-        # 'booster': trial.suggest_categorical('booster', ['gbtree', 'gblinear', 'dart']),
-        # 'lambda': trial.suggest_float('lambda', 1e-8, 1.0, log=True),
-        # 'alpha': trial.suggest_float('alpha', 1e-8, 1.0, log=True),
-        # 'eta': trial.suggest_float('eta', 1e-8, 1.0, log=True),
     }
 
     # Train the model
@@ -870,8 +867,9 @@ print(f'Best hyperparameters: {best_params}')
 # model with optuna -1
 
 """
-xgboost_1 =  XGBRegressor(max_depth=9, n_estimators=437, learning_rate= 0.012706457541012496,
-                          subsample=0.6931194195294401, colsample_bytree= 0.9303143908925534)
+# xgboost_1 =  XGBRegressor(max_depth=9, n_estimators=437, learning_rate= 0.012706457541012496,
+                        #   subsample=0.6931194195294401, colsample_bytree= 0.9303143908925534)
+xgboost_1 =  XGBRegressor(random_state=42,**best_params)
 xgboost_1.fit(X_train, y_train)
 y_pred_xg_1 = xgboost_1.predict(X_test)
 print("R2 score:", r2_score(y_test, y_pred_xg_1))
@@ -885,10 +883,24 @@ mlflow.log_metric("r2_score", r2_score(y_test, y_pred_xg_1))
 mlflow.log_metric("rmse", np.sqrt(mean_squared_error(y_test,y_pred_xg_1)))
 mlflow.log_metric("mse", mean_squared_error(y_test, y_pred_xg_1))
 mlflow.log_metric("mape", np.sqrt(mean_absolute_percentage_error(y_test,y_pred_xg_1)))
+
+import mlflow.pyfunc
+model_name = "delivery_time_model"         #"sklearn-titanic-rf-model"
+    
+# Register new model/version of model
+mlflow.sklearn.log_model(sk_model = xgboost_1, 
+                            artifact_path="trained_model",
+                            registered_model_name=model_name
+                            )
+# Add 'last-trained' alias to this new model version
+client.set_registered_model_alias(name=model_name, alias="last-trained", version=str(1))
+client.set_registered_model_alias(name=model_name, alias="production", version=str(1))
+client.set_registered_model_alias(name=model_name, alias="experiment-best-model", version=str(1))
+
 # End an active MLflow run
 mlflow.end_run()
 
-
+"""
 
 # Optuna-model-2
 mlflow.start_run(experiment_id= exp.experiment_id, run_name= "XGBRegressor-Optuna-2")
@@ -1115,7 +1127,6 @@ mlflow.log_metric("mape", np.sqrt(mean_absolute_percentage_error(y_test_cat,y_pr
 # End an active MLflow run
 mlflow.end_run()
 
-"""
 
 # RandomForest-Gridsearch
 mlflow.start_run(experiment_id= exp.experiment_id, run_name= "RandomForestRegressor-GridSearch")
@@ -1191,182 +1202,4 @@ mlflow.log_metric("mape", np.sqrt(mean_absolute_percentage_error(y_test,y_pred))
 # End an active MLflow run
 mlflow.end_run()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""**Previous Code**"""
-
-prep_data = df_train.copy()
-
-prep_data.info()
-
-prep_data["weather_conditions"] = prep_data["weather_conditions"].map(weather_mappings)
-prep_data["road_traffic_density"] = prep_data["road_traffic_density"].map(traff_den_mappings)
-prep_data["type_of_order"] = prep_data["type_of_order"].map(order_type_mappings)
-prep_data["type_of_vehicle"] = prep_data["type_of_vehicle"].map(vehicle_mappings)
-prep_data["city"] = prep_data["city"].map(city_area_mappings)
-prep_data["festival"] = prep_data["festival"].map(festival_mappings)
-prep_data["month"] = prep_data["month"].map(mnth_mappings)
-
-df_train.head()
-
-prep_data.head()
-
-"""### Model Training"""
 """
-
-target = ['time_taken_in_min']
-features = ['delivery_person_age', 'delivery_person_ratings', 'restaurant_latitude', 'restaurant_longitude', 'delivery_location_latitude', 'delivery_location_longitude', 'weather_conditions', 'road_traffic_density', 'vehicle_condition', 'type_of_order', 'type_of_vehicle', 'multiple_deliveries', 'festival', 'city', 'day_of_week', 'is_weekend', 'quarter', 'year', 'month', 'distance', 'order_prepare_time']
-
-
-
-# divide train and test
-X_train, X_test, y_train, y_test = train_test_split(
-
-        prep_data[features],     # predictors
-        prep_data[target],       # target
-        test_size = 0.2,
-        random_state= 42,   # set the random seed here for reproducibility
-    )
-
-# split across date - strategy
-
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestRegressor
-from xgboost import XGBRegressor
-from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.preprocessing import OneHotEncoder
-
-
-
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import GridSearchCV
-
-# Define model
-rf = RandomForestRegressor(random_state=42)
-
-# Define hyperparameters grid
-param_grid = {
-    'n_estimators': [10,20,40,50,100],
-    'max_depth': [3,5,7,9]
-    }
-
-# Grid search with cross-validation
-grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, cv=5, n_jobs=-1, verbose=1)
-grid_search.fit(X_train, y_train)
-
-# Best hyperparameters
-print("Best hyperparameters:", grid_search.best_params_)
-best_model = grid_search.best_estimator_
-
-# Evaluate on test data
-y_pred = best_model.predict(X_test)
-print("R² Score:", best_model.score(X_test, y_test))
-
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import GridSearchCV
-import xgboost as xgb
-
-# Define model
-rf = xgb.XGBRegressor(random_state=42)
-
-# Define hyperparameters grid
-param_grid = {
-    'n_estimators': [10,20,40,50,100],
-    'max_depth': [3,5,7,9]
-    }
-
-# Grid search with cross-validation
-grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, cv=5, n_jobs=-1, verbose=1)
-grid_search.fit(X_train, y_train)
-
-# Best hyperparameters
-print("Best hyperparameters:", grid_search.best_params_)
-best_model = grid_search.best_estimator_
-
-# Evaluate on test data
-y_pred = best_model.predict(X_test)
-print("R² Score:", best_model.score(X_test, y_test))
-
-from sklearn.metrics import mean_squared_error, r2_score, mean_squared_error, mean_absolute_percentage_error
-
-# Model Development
-xgb_model = xgb.XGBRegressor(
-        n_estimators=10,  # Number of boosting rounds (trees)
-    max_depth=9,       # Maximum depth of the trees
-    random_state=42     # Random seed for reproducibility
-
-)
-
-# Train the model on training data
-xgb_model.fit(X_train, y_train)
-
-# Inference: Predict on the test data
-y_pred = xgb_model.predict(X_test)
-
-# Metrics
-print("R2 score:", r2_score(y_test, y_pred))
-print("Mean squared error:", mean_squared_error(y_test, y_pred))
-print(f"Root mean squared error:{np.sqrt(mean_squared_error(y_test,y_pred))}")
-print("Mean Absolute Pecentage error:",mean_absolute_percentage_error(y_test,y_pred))
-
-# Get feature importance scores
-importance = best_model.feature_importances_
-
-# Display feature importance
-for feature_name, score in zip(features, importance):
-    print(f"{feature_name}: {score:.4f}")
-
-from xgboost import plot_importance
-import matplotlib.pyplot as plt
-
-# Plot feature importance
-plot_importance(best_model, importance_type="weight")
-plt.show()
-
-from sklearn.model_selection import GridSearchCV, cross_val_score
-from sklearn.linear_model import LinearRegression
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor
-import xgboost as xgb
-
-# Find the best model
-models = [
-    #LinearRegression(),
-    DecisionTreeRegressor(),
-    RandomForestRegressor(),
-    xgb.XGBRegressor(),
-]
-
-param_grid = [
-    {},
-    {'max_depth': [3, 5, 7]},
-    {'n_estimators': [100, 200, 300]},
-    {'n_estimators': [20, 25, 30], 'max_depth': [5, 7, 9]},
-]
-
-for i, model in enumerate(models):
-    grid_search = GridSearchCV(model, param_grid[i], cv=5, scoring='r2')
-    grid_search.fit(X_train, y_train)
-
-    print(f"{model.__class__.__name__}:")
-    print("Best parameters:", grid_search.best_params_)
-    print("Best R2 score:", grid_search.best_score_)
-    print()
-    """

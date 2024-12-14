@@ -9,8 +9,8 @@ from sklearn.model_selection import train_test_split
 
 from delivery_time_model.config.core import config
 from delivery_time_model.processing.data_manager import load_dataset_test1
-import sqlite3
-import aiohttp
+# import sqlite3
+# import aiohttp
 
 
 @pytest.fixture

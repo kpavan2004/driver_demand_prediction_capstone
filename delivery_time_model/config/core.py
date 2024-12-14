@@ -82,8 +82,11 @@ class ModelConfig(BaseModel):
     
     test_size:float
     random_state: int
-    n_estimators: int
-    max_depth: int
+    # n_estimators: int
+    # max_depth: int
+    # learning_rate: float
+    # colsample_bytree: float
+    # subsample: float
 
 
 class Config(BaseModel):
