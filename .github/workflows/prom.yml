@@ -10,6 +10,10 @@ jobs:
     # needs: [train, test, build, push-image]
     runs-on: ec2
     steps:
+      - name: Fix directory permissions
+        run: |
+          sudo chmod -R 777 /home/ubuntu/actions-runner/_work/driver_demand_prediction_capstone || true
+          sudo rm -rf /home/ubuntu/actions-runner/_work/driver_demand_prediction_capstone || true
       - name: Checkout Repository
         uses: actions/checkout@v3
         
