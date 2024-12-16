@@ -21,9 +21,9 @@ jobs:
         run: sudo docker pull $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv
     
       - name: Delete Old Docker Container
-        run: sudo docker rm -f app_container || true
+        run: sudo docker rm -f app_cont || true
     
       - name: Run Docker Container
         env: 
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-        run: sudo docker run -it -d -p 8001:8001 --name app_cont $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv
+        run: sudo docker run -it -d -p 8001:8001 --name app_cont -e DOCKER_USER=$DOCKER_USER -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION -e GH_USERNAME=$GH_USERNAME -e GH_ACCESS_TOKEN=$GH_ACCESS_TOKEN $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv
