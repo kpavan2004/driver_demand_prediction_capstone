@@ -17,8 +17,8 @@ from delivery_time_model.processing.validation import validate_inputs
 #################### MLflow CODE START to load 'production' model #############################
 import mlflow 
 import mlflow.pyfunc
-# mlflow.set_tracking_uri(config.app_config.mlflow_tracking_uri)
-mlflow.set_tracking_uri("http://192.168.1.19:5000")
+mlflow.set_tracking_uri(config.app_config.mlflow_tracking_uri)
+# mlflow.set_tracking_uri("http://192.168.1.19:5000")
 # Create MLflow client
 client = mlflow.tracking.MlflowClient()
 
