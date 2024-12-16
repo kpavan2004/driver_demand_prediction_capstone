@@ -9,14 +9,12 @@ jobs:
   deploy:
     # needs: [train, test, build, push-image]
     runs-on: ec2
-	
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-		
+	
       - name: Delete Old Docker Container
         run: sudo docker rm -f prom_cont || true
-    
       - name: Run Docker Container
         env: 
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
