@@ -1,0 +1,17 @@
+name: test Pipeline
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ec2  # Ensure it runs on the EC2 runner
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Debug repository files
+      - name: List repository files
+        run: ls -la /home/ubuntu/actions-runner/_work/driver_demand_prediction_capstone/driver_demand_prediction_capstone
