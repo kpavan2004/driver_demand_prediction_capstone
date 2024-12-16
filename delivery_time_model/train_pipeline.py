@@ -44,7 +44,7 @@ def run_training() -> None:
     
     # Set an experiment name, unique and case-sensitive
     # It will create a new experiment if the experiment with given doesn't exist
-    exp = mlflow.set_experiment(experiment_name = "Driver-Delivery-Time-Prediction")
+    exp = mlflow.set_experiment(experiment_name = "Driver-Delivery-Time-Prediction-New")
     
     # read training data
     data = load_dataset(file_name = config.app_config.training_data_file)
@@ -141,16 +141,25 @@ def run_training() -> None:
 
     # Log params
     # fetch latest-model info
-    latest_model_info = client.get_model_version_by_alias(name=model_name, alias="production")  
+    latest_model_info = client.get_model_version_by_alias(name=model_name, alias="experiment-best-model")  
     run_id = latest_model_info.run_id
     run = client.get_run(run_id)
     hyperparams = run.data.params
 
     # Print the hyperparameters   
     best_params = {key: convert_to_numeric(value) for key, value in hyperparams.items()}
-    
     for param_name, param_value in best_params.items():
         mlflow.log_param(param_name, param_value)
+        
+    # import ast
+    # parsed_params = ast.literal_eval(best_params['best_param'])
+    # mlflow.log_param('n_estimators', parsed_params['n_estimators'])
+    # mlflow.log_param('max_depth', parsed_params['max_depth'])
+    # mlflow.log_param('learning_rate', float(parsed_params['learning_rate']))
+    # mlflow.log_param('subsample', float(parsed_params['subsample']))
+    # mlflow.log_param('colsample_bytree', float(parsed_params['colsample_bytree']))
+        
+        
 
     # End an active MLflow run
     mlflow.end_run()

@@ -36,7 +36,7 @@ def get_best_model_from_mlflow():
     mlflow.set_tracking_uri(config.app_config.mlflow_tracking_uri)
     
     # Get the experiment
-    exp = mlflow.set_experiment(experiment_name = "Driver-Delivery-Time-Prediction")
+    exp = mlflow.set_experiment(experiment_name = "Driver-Delivery-Time-Prediction-New")
     if exp is None:
         raise ValueError(f"Experiment '{exp}' does not exist in MLflow.")
     
@@ -59,7 +59,8 @@ def get_best_model_from_mlflow():
     print("Best Model Hyperparameters:")   
     best_params = {key: convert_to_numeric(value) for key, value in hyperparams.items()}
     print(best_params)
-
+    # import ast
+    # parsed_params = ast.literal_eval(best_params['best_param'])
     return best_model, best_params
 
 best_model, best_params = get_best_model_from_mlflow()
@@ -88,5 +89,10 @@ demand_pipe = Pipeline([
     # Scale features
     ('scaler', StandardScaler()),
     
-    ('model_xgb', XGBRegressor(**best_params))
+    ('model_xgb', XGBRegressor(n_estimators = best_params['n_estimators'], 
+                                       max_depth = best_params['max_depth'],
+                                       learning_rate = float(best_params['learning_rate']),
+                                       colsample_bytree = float(best_params['colsample_bytree']),
+                                       subsample = float(best_params['subsample']),
+                                      random_state = 42))
     ])

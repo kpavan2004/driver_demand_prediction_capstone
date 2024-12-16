@@ -633,7 +633,7 @@ from sklearn.model_selection import GridSearchCV, cross_val_score, RandomizedSea
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 import xgboost as xgb
-from catboost import CatBoostRegressor
+# from catboost import CatBoostRegressor
 import optuna
 
 from sklearn.metrics import mean_squared_error, r2_score, mean_squared_error, mean_absolute_percentage_error
@@ -646,7 +646,7 @@ client = mlflow.tracking.MlflowClient()
 
 # Create or set the experiment
 # exp = mlflow.set_experiment(experiment_name)
-exp = mlflow.set_experiment(experiment_name = "Driver-Delivery-Time-Prediction-Exp")
+exp = mlflow.set_experiment(experiment_name = "Driver-Delivery-Time-Prediction-New")
 
     # Start an MLflow run
 
@@ -827,7 +827,7 @@ mlflow.end_run()
 
 
 ## Optuna model-1
-exp = mlflow.set_experiment(experiment_name = "Driver-Delivery-Time-Prediction")
+exp = mlflow.set_experiment(experiment_name = "Driver-Delivery-Time-Prediction-New")
 
 mlflow.start_run(experiment_id= exp.experiment_id, run_name= "XGBRegressor-Optuna-1")
 
@@ -878,7 +878,13 @@ print(f"Root mean squared error:{np.sqrt(mean_squared_error(y_test,y_pred_xg_1))
 print("Mean Absolute Pecentage error:",mean_absolute_percentage_error(y_test,y_pred_xg_1))
 
 
-mlflow.log_param("best_param", best_params)
+# mlflow.log_param("best_param", best_params)
+mlflow.log_param("n_estimators", best_params['n_estimators'])
+mlflow.log_param("max_depth", best_params['max_depth'])
+mlflow.log_param("learning_rate", best_params['learning_rate'])
+mlflow.log_param("subsample", best_params['subsample'])
+mlflow.log_param("colsample_bytree", best_params['colsample_bytree'])
+
 mlflow.log_metric("r2_score", r2_score(y_test, y_pred_xg_1))
 mlflow.log_metric("rmse", np.sqrt(mean_squared_error(y_test,y_pred_xg_1)))
 mlflow.log_metric("mse", mean_squared_error(y_test, y_pred_xg_1))
