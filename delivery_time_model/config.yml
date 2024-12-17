@@ -162,5 +162,4 @@ random_state: 42
 
 # mlflow tracking uri
 registered_model_name: delivery_time_model
-# mlflow_tracking_uri: https://turbo-memory-vpg757xvq66hpppq-5000.app.github.dev
-mlflow_tracking_uri: ${MLFLOW_TRACKING_URI}
+mlflow_tracking_uri: https://turbo-computing-machine-r7rvxvjgpxv3xx5g-5000.app.github.dev
