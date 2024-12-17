@@ -122,7 +122,7 @@ jobs:
         path: dist/*.whl
 
   deploy:
-    # needs: [train, test, build]
+    needs: [train, test, build]
     name: Deploy
     runs-on: ubuntu-latest
     steps:
