@@ -1,0 +1,85 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:905418482543:task-definition/sample-fargate-1:3",
+    "containerDefinitions": [
+        {
+            "name": "driver-delivery-time",
+            "image": "905418482543.dkr.ecr.ap-south-1.amazonaws.com/delivery-time-fastapi",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "containerPort": 8001,
+                    "hostPort": 8001,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "DOCKER_USER",
+                    "value": "your-placeholder-value"
+                },
+                {
+                    "name": "AWS_ACCESS_KEY_ID",
+                    "value": "your-placeholder-value"
+                },
+                {
+                    "name": "AWS_SECRET_ACCESS_KEY",
+                    "value": "your-placeholder-value"
+                },
+                {
+                    "name": "AWS_DEFAULT_REGION",
+                    "value": "your-placeholder-value"
+                },
+                {
+                    "name": "DATA_VERSION",
+                    "value": "your-placeholder-value"
+                },
+                {
+                    "name": "GH_USERNAME",
+                    "value": "your-placeholder-value"
+                },
+                {
+                    "name": "GH_ACCESS_TOKEN",
+                    "value": "your-placeholder-value"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "systemControls": []
+        }
+    ],
+    "family": "sample-fargate-1",
+    "executionRoleArn": "arn:aws:iam::905418482543:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "revision": 3,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "registeredAt": "2024-12-17T11:23:01.425Z",
+    "registeredBy": "arn:aws:iam::905418482543:root",
+    "enableFaultInjection": false,
+    "tags": []
+}
