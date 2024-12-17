@@ -79,7 +79,5 @@
     "cpu": "1024",
     "memory": "3072",
     "registeredAt": "2024-12-17T11:23:01.425Z",
-    "registeredBy": "arn:aws:iam::905418482543:root",
-    "enableFaultInjection": false,
     "tags": []
 }
