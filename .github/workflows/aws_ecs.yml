@@ -162,12 +162,12 @@ jobs:
         container-name: ${{ env.CONTAINER_NAME }}
         image: ${{ steps.build-image.outputs.image }}
         environment-variables: |
-          DATA_VERSION: v1.1
-          GH_USERNAME: ${{ secrets.GH_USERNAME }}
-          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DATA_VERSION=${{ secrets.DATA_VERSION }}
+          GH_USERNAME=${{ secrets.GH_USERNAME }}
+          GH_ACCESS_TOKEN=${{ secrets.GH_ACCESS_TOKEN }}
+          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          DOCKER_USER=${{ secrets.DOCKER_USER }}
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
