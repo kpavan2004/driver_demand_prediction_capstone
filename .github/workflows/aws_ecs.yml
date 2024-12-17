@@ -28,14 +28,14 @@ name: Deploy to Amazon ECS
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 env:
   AWS_REGION: ap-south-1
   ECR_REPOSITORY: delivery-time-fastapi
   ECS_SERVICE: my-delivery-time
   ECS_CLUSTER: MLCluster-1
-  ECS_TASK_DEFINITION: sample-fargate-1.json
+  ECS_TASK_DEFINITION: sample-fargate-1-revision2.json
   CONTAINER_NAME: driver-delivery-time
 
 permissions:
