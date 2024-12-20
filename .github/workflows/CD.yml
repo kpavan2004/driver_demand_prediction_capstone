@@ -19,7 +19,7 @@ jobs:
           GH_USERNAME: ${{ secrets.GH_USERNAME }}
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           DATA_VERSION: ${{ secrets.DATA_VERSION }}
-        run: sudo docker pull $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv
+        run: sudo docker pull $DOCKER_USER/driver_delivery_time_pred-fastapi_codespace
     
       - name: Delete Old Docker Container
         run: sudo docker rm -f app_cont || true
