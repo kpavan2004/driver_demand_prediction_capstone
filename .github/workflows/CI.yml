@@ -106,12 +106,12 @@ jobs:
     - name: Build the Docker image for Fastapi app
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-      run: docker build . -f Dockerfile -t $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv:latest
+      run: docker build . -f Dockerfile -t $DOCKER_USER/driver_delivery_time_pred-fastapi_codespace:latest
 
     - name: Push the Docker Image
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-      run: docker push $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv
+      run: docker push $DOCKER_USER/driver_delivery_time_pred-fastapi_codespace
 
     - name: Logout to Docker hub
       run: docker logout
