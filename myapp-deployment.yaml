@@ -17,7 +17,7 @@ spec:
         prometheus.io/path: "/api/v1/metrics"     # Metrics path
     spec:
       containers:
-      - image: kpavan2004/driver_delivery_time_pred-fastapi_noenv
+      - image: kpavan2004/driver_delivery_time_pred-fastapi_codespace
         name: mycontainer
         ports:
         - containerPort: 8001
@@ -44,8 +44,8 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: myapp-hpa
 spec:
-  maxReplicas: 5
-  minReplicas: 2
+  maxReplicas: 3
+  minReplicas: 1
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
