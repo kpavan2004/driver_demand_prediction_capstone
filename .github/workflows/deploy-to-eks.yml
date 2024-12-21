@@ -3,7 +3,7 @@ name: Deploy to EKS
 on:
   push:
     branches:
-      - main  # Deploy when code is pushed to the main branch
+      - main  # Deploy when code is pushed to the main branch 
 
 jobs:
   deploy:
