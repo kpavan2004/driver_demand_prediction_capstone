@@ -118,29 +118,31 @@ jobs:
 
   deploy:
     needs: [train, test, build, push-image]
-    runs-on: ec2
+    name: Deploy to EKS
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Pull Docker Image
-        env: 
-          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          GH_USERNAME: ${{ secrets.GH_USERNAME }}
-          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-          DATA_VERSION: ${{ secrets.DATA_VERSION }}
-        run: sudo docker pull $DOCKER_USER/driver_delivery_time_pred-fastapi_codespace
-    
-      - name: Delete Old Docker Container
-        run: sudo docker rm -f app_cont || true
-    
-      - name: Run Docker Container
-        env: 
-          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          GH_USERNAME: ${{ secrets.GH_USERNAME }}
-          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-          DATA_VERSION: ${{ secrets.DATA_VERSION }}
-        run: sudo docker run -it -d -p 8001:8001 --name app_cont -e DOCKER_USER=$DOCKER_USER -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION -e GH_USERNAME=$GH_USERNAME -e GH_ACCESS_TOKEN=$GH_ACCESS_TOKEN -e DATA_VERSION=$DATA_VERSION $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      run: |
+        aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+        aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+        aws configure set aws_default_region $AWS_DEFAULT_REGION
+
+    - name: Configure kubectl
+      run: |
+        aws eks update-kubeconfig --region ap-south-1 --name myCluster-1
+
+    - name: Deploy to EKS
+      run: |
+        kubectl apply -f myapp-deployment.yaml
+
+    - name: Verify Deployment
+      run: |
+        kubectl get all
