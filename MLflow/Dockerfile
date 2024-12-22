@@ -13,5 +13,6 @@ EXPOSE 5000
 RUN mkdir -p /app/mlflow && chmod -R 777 /app/mlflow
 
 # Default command to run MLflow server
-CMD ["mlflow", "ui", "--host", "0.0.0.0", "--port", "5000", "--backend-store-uri", "sqlite:///mlflow/mlflow.db", "--artifacts-destination", "s3://pk-capstone-bucket-01/MLflow-data/"]
+# CMD ["mlflow", "ui", "--host", "0.0.0.0", "--port", "5000", "--backend-store-uri", "sqlite:///mlflow/mlflow.db", "--artifacts-destination", "s3://pk-capstone-bucket-01/MLflow-data/"]
+CMD ["mlflow", "ui", "--host", "0.0.0.0", "--port", "5000", "--backend-store-uri", "sqlite:///mlflow/mlflow.db"]
 
