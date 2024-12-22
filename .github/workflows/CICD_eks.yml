@@ -117,7 +117,7 @@ jobs:
       run: docker logout
 
   deploy:
-    # needs: [train, test, build, push-image]
+    needs: [train, test, build, push-image]
     runs-on: ec2
     steps:
       - name: Pull Docker Image
