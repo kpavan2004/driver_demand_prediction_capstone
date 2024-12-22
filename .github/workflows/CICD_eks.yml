@@ -1,0 +1,146 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  train:
+    env:
+      RE_TRAIN: Yes      # Re-train 'Yes' / 'No'?
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'	
+    - name: Install app dependencies
+      run: pip install -r requirements/requirements.txt
+    - name: Train and save pipeline
+      env:
+        DATA_VERSION: v1.1
+        GH_USERNAME: ${{ secrets.GH_USERNAME }}
+        GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+      run: python delivery_time_model/train_pipeline.py
+    - uses: actions/upload-artifact@v3
+      with:
+        name: my-trained-pipeline
+        path: delivery_time_model/trained_models
+
+  test:
+    needs: train
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+    - uses: actions/download-artifact@v3
+      with:
+        name: my-trained-pipeline
+        path: delivery_time_model/trained_models
+    - name: Install dependencies
+      run: pip install -r requirements/test_requirements.txt
+    - name: Test with pytest
+      env:
+        DATA_VERSION: v1.1
+        GH_USERNAME: ${{ secrets.GH_USERNAME }}
+        GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+      run: pytest
+
+  build:
+    needs: [train, test]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+    - uses: actions/download-artifact@v3
+      with:
+        name: my-trained-pipeline
+        path: delivery_time_model/trained_models
+    - name: Install dependencies
+      run: pip install --upgrade build
+    - name: Build package
+      run: python -m build
+    - uses: actions/upload-artifact@v3
+      with:
+        name: my-build-package
+        path: dist/*.whl
+
+  push-image:
+    needs: [train, test, build]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Repo Checkout
+      uses: actions/checkout@v3
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: my-build-package
+        path: delivery_time_model_api
+
+    - name: Login to Docker hub
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASS_TOKEN }}
+      run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+
+    - name: Build the Docker image for Fastapi app
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+      run: docker build . -f Dockerfile -t $DOCKER_USER/driver_delivery_time_pred-fastapi_codespace:latest
+
+    - name: Push the Docker Image
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+      run: docker push $DOCKER_USER/driver_delivery_time_pred-fastapi_codespace
+
+    - name: Logout to Docker hub
+      run: docker logout
+
+  deploy:
+    # needs: [train, test, build, push-image]
+    runs-on: ec2
+    steps:
+      - name: Pull Docker Image
+        env: 
+          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          GH_USERNAME: ${{ secrets.GH_USERNAME }}
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          DATA_VERSION: ${{ secrets.DATA_VERSION }}
+        run: sudo docker pull $DOCKER_USER/driver_delivery_time_pred-fastapi_codespace
+    
+      - name: Delete Old Docker Container
+        run: sudo docker rm -f app_cont || true
+    
+      - name: Run Docker Container
+        env: 
+          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          GH_USERNAME: ${{ secrets.GH_USERNAME }}
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          DATA_VERSION: ${{ secrets.DATA_VERSION }}
+        run: sudo docker run -it -d -p 8001:8001 --name app_cont -e DOCKER_USER=$DOCKER_USER -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION -e GH_USERNAME=$GH_USERNAME -e GH_ACCESS_TOKEN=$GH_ACCESS_TOKEN -e DATA_VERSION=$DATA_VERSION $DOCKER_USER/driver_delivery_time_pred-fastapi_noenv
