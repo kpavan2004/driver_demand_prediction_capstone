@@ -28,9 +28,9 @@ from geopy.distance import geodesic
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import OneHotEncoder
 import mlflow
-# mlflow.set_tracking_uri("http://localhost:5000/")
+mlflow.set_tracking_uri("http://localhost:5000/")
 # mlflow.set_tracking_uri("https://shiny-space-trout-r7rvxvjgrxj3xx97-5000.app.github.dev")
-mlflow.set_tracking_uri("http://a2855af5b818f4c7e8f57361749a8ecd-1493120475.ap-south-1.elb.amazonaws.com:5000")
+# mlflow.set_tracking_uri("http://a2855af5b818f4c7e8f57361749a8ecd-1493120475.ap-south-1.elb.amazonaws.com:5000")
 
 from sklearn.model_selection import train_test_split,cross_val_score, GridSearchCV
 from sklearn.preprocessing import LabelEncoder,StandardScaler

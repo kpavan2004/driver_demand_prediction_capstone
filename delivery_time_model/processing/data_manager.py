@@ -293,17 +293,20 @@ def _load_raw_dataset(*, file_name: str) -> pd.DataFrame:
     return dataframe
 
 def load_dataset(*, file_name: str) -> pd.DataFrame:
-    dataframe = read_data_file()  # pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
+    # dataframe = read_data_file()  
+    dataframe = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
     transformed = pre_pipeline_preparation(data_frame = dataframe)
     return transformed
 
 def load_dataset_test(*, file_name: str) -> pd.DataFrame:
-    dataframe = read_data_file() # pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
+    # dataframe = read_data_file()  
+    dataframe = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
     transformed = pre_pipeline_trans(data_frame = dataframe)
     return transformed
 
 def load_dataset_test1(*, file_name: str) -> pd.DataFrame:
-    dataframe = read_data_file()  #pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
+    # dataframe = read_data_file()  
+    dataframe = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
     transformed = pre_pipeline_preparation_test(data_frame = dataframe)
     # transformed = pre_pipeline_preparation(data_frame = dataframe)
     return transformed
