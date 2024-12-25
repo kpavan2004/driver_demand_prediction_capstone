@@ -8,7 +8,7 @@ source ./venv/Scripts/activate
 pip install -r requirements/test_requirements.txt
 
 ## Launch the mlflow
-Mlflow server should be launched first using : and then change port visibility from private to public. Down the docker image created from git repo: https://github.com/kpavan2004/mlflow_server_dev
+Mlflow server should be launched first using : and then change port visibility from private to public incase of codespace. Down the docker image created from MLflow/Dockerfile
 ```bash
 docker run -it -d -p 5000:5000 -u root -v "C:\IISC_AI_and_MLOps\course_materials\Capstone_Project\dev\driver_demand_prediction_capstone\MLflow\mlflow.db:/mlflow/mlflow.db" -v "C:\IISC_AI_and_MLOps\course_materials\Capstone_Project\dev\driver_demand_prediction_capstone\MLflow\mlartifacts/:/mlflow/mlartifacts/" --name=mlflow_cont kpavan2004/mlflow_server_dev
 ```
