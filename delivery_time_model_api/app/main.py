@@ -29,7 +29,7 @@ import prometheus_client as prom
 from delivery_time_model import __version__ as ml_version
 from delivery_time_model.predict import make_prediction
 from delivery_time_model.config.core import CONFIG_FILE_PATH
-
+from prometheus_fastapi_instrumentator import Instrumentator
 
 
 app = FastAPI(
@@ -38,6 +38,9 @@ app = FastAPI(
 
 root_router = APIRouter()
 curr_path =str(Path(__file__).parent)
+
+# Initialize Prometheus metrics
+Instrumentator().instrument(app).expose(app,endpoint="/api/v1/gen_metrics")
 
 # FastAPI object
 
