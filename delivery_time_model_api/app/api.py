@@ -25,6 +25,7 @@ import prometheus_client as prom
 curr_path = str(Path(__file__).parent)
 from sklearn.metrics import r2_score,root_mean_squared_error
 from delivery_time_model.processing.data_manager import load_dataset_test1
+import psutil
 
 api_router = APIRouter()
 
@@ -59,7 +60,8 @@ async def predict(input_data: schemas.MultipleDataInputs_api) -> Any:
 
 rmse_metric = prom.Gauge('delivery_time_rmse', 'Root mean square error for few random test samples')
 r2_metric = prom.Gauge('delivery_time_r2_score', 'R2 score for random test samples')
-
+cpu_usage_gauge = prom.Gauge("app_cpu_usage_percent", "CPU usage of the app")
+memory_usage_gauge = prom.Gauge("app_memory_usage_bytes", "Memory usage of the app")
 
 # Function for updating metrics
 def update_metrics():
@@ -82,6 +84,11 @@ def update_metrics():
     
     rmse = root_mean_squared_error(test_actual, _predictions)
     rmse_metric.set(rmse)
+    
+    # Capture CPU and memory usage
+    cpu_usage_gauge.set(psutil.cpu_percent())
+    memory_info = psutil.virtual_memory()
+    memory_usage_gauge.set(memory_info.used)
   
 @api_router.get("/metrics")
 async def get_metrics():
