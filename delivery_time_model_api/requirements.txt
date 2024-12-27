@@ -19,6 +19,8 @@ dvc-s3==3.2.0
 requests==2.32.3
 pytest==6.2.5
 pydantic_settings
+prometheus_fastapi_instrumentator
+psutil
 
 # repo maintenance tooling 
 #black>=22.0.0,<23.0.0pwd
