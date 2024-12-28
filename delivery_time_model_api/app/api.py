@@ -68,7 +68,8 @@ def update_metrics():
     
     # LOAD TEST DATA
     test_data = load_dataset_test1(file_name = "train.csv")
-    test = test_data.sample(10).astype(str)
+    # test = test_data.sample(10).astype(str)
+    test = test_data.astype(str)
     # test_feat = test.drop('Time_taken', axis=1)
     test_actual = test['Time_taken'].astype(float).values
     
