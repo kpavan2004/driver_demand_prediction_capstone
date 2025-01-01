@@ -1,0 +1,165 @@
+# Package Overview
+package_name: delivery_time_model
+
+# Data Files
+training_data_file: train.csv
+testing_data_file: test.csv
+
+# Variables
+# The variable we are attempting to predict (cnt)
+target: Time_taken
+
+pipeline_name: delivery_time
+pipeline_save_file: delivery_time_output_v
+
+# Features that will go inside processing pipeline
+features:
+  - Delivery_person_Age
+  - Delivery_person_Ratings 
+  - Restaurant_latitude
+  - Restaurant_longitude
+  - Delivery_location_latitude
+  - Delivery_location_longitude
+  - Weatherconditions
+  - Road_traffic_density
+  - Vehicle_condition
+  - Type_of_order
+  - Type_of_vehicle
+  - multiple_deliveries
+  - Festival
+  - City_area
+  - City
+  - day_of_week
+  - is_weekend
+  - quarter
+  - yr
+  - mnth
+  - Distance
+  - order_prepare_time
+
+unused_fields:  # Features to drop before pipeline
+  - ID
+  - Order_Date
+  - Time_Orderd                  
+  - Delivery_person_ID
+
+# Features names
+Delivery_person_Age_var: Delivery_person_Age
+Delivery_person_Ratings_var: Delivery_person_Ratings 
+Restaurant_latitude_var: Restaurant_latitude
+Restaurant_longitude_var: Restaurant_longitude
+Delivery_location_latitude_var: Delivery_location_latitude
+Delivery_location_longitude_var: Delivery_location_longitude
+Weatherconditions_var: Weatherconditions
+Road_traffic_density_var: Road_traffic_density
+Vehicle_condition_var: Vehicle_condition
+Type_of_order_var: Type_of_order
+Type_of_vehicle_var: Type_of_vehicle
+multiple_deliveries_var: multiple_deliveries
+Festival_var: Festival
+City_area_var: City_area
+City_var: City
+day_of_week_var: day_of_week 
+is_weekend_var: is_weekend
+quarter_var: quarter
+yr_var: yr
+mnth_var: mnth
+Distance_var: Distance
+order_prepare_time_var : order_prepare_time
+
+# Mappings for Ordinal categorical features
+weather_mappings:
+  Sunny: 0
+  Stormy: 1
+  Sandstorms: 2
+  Cloudy: 3
+  Fog: 4
+  Windy: 5
+
+traff_den_mappings:
+  High: 0
+  Jam: 1
+  Low: 2 
+  Medium: 3
+  
+order_type_mappings:
+  Snack: 0
+  Drinks: 1
+  Buffet: 2
+  Meal: 3
+
+vehicle_mappings:
+  motorcycle: 0
+  scooter: 1
+  electric_scooter: 2
+  bicycle: 3
+  
+festival_mappings:
+  No: 0
+  Yes: 1
+  
+city_area_mappings:
+  Urban: 0
+  Metropolitian: 1
+  Semi-Urban: 2
+
+# city_mappings:
+#   INDO: 0
+#   BANG: 1
+#   COIMB: 2
+#   CHEN: 3
+#   HYD: 4
+#   RANCHI: 5
+#   MYS: 6
+#   DEH: 7
+#   KOC: 8
+#   PUNE: 9
+#   LUDH: 10
+#   KNP: 11
+#   MUM: 12
+#   KOL: 13
+#   JAP: 14
+#   SUR: 15
+#   GOA: 16
+#   AURG: 17
+#   AGR: 18
+#   VAD: 19
+#   ALH: 20
+#   BHP: 21
+
+mnth_mappings:
+  January: 0
+  February: 1
+  December: 2
+  March: 3
+  November: 4
+  April: 5
+  October: 6
+  May: 7
+  September: 8
+  June: 9
+  July: 10
+  August: 11
+
+# Set train/test split
+test_size: 0.20
+
+# Set the random seed
+random_state: 42
+
+# Alogrithm parameters
+# n_estimators: 50
+# max_depth: 9
+# learning_rate: 0.1
+# min_child_weight: 0.8
+# subsample: 0.8
+
+# n_estimators: 425
+# max_depth: 9
+# learning_rate: 0.011
+# subsample: 0.611
+# colsample_bytree: 0.965
+
+# mlflow tracking uri
+registered_model_name: delivery_time_model
+mlflow_tracking_uri: http://localhost:5000

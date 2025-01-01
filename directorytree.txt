@@ -1,0 +1,125 @@
+.
+├── MLflow
+│   ├── Dockerfile
+│   ├── experiment
+│   │   └── mlflow.db
+│   ├── mlartifacts
+│   └── mlflow.db
+├── README.md
+├── directorystructure.sh
+├── directorytree.txt
+├── docker-compose.yml
+├── framework
+│   ├── common
+│   │   ├── config
+│   │   └── utils
+│   ├── grafana
+│   │   └── grafana-dashboard
+│   │       ├── Grafana
+│   │       │   └── env.list
+│   │       └── grafana-deployment.yaml
+│   ├── mlflow
+│   │   └── mlflow-server
+│   │       ├── mlartifacts
+│   │       └── mlflow.db
+│   ├── prometheus
+│   │   └── prometheus-server
+│   │       ├── Prometheus
+│   │       │   ├── prometheus-data
+│   │       │   │   ├── chunks_head
+│   │       │   │   │   └── 000001
+│   │       │   │   ├── lock
+│   │       │   │   ├── queries.active
+│   │       │   │   └── wal
+│   │       │   │       └── 00000000
+│   │       │   └── prometheus.yml
+│   │       └── prometheus-deployment.yaml
+│   └── swagger
+│       └── swagger-ui
+├── k8s
+├── ml_models
+│   ├── delivery_charge_prediction
+│   │   ├── Dockerfile
+│   │   ├── data
+│   │   ├── delivery_time_model
+│   │   │   ├── VERSION
+│   │   │   ├── __init__.py
+│   │   │   ├── config
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── core.py
+│   │   │   ├── config.yml
+│   │   │   ├── datasets
+│   │   │   │   ├── Sample_Submission.csv
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── sample.csv
+│   │   │   │   ├── test.csv
+│   │   │   │   └── train.csv
+│   │   │   ├── pipeline.py
+│   │   │   ├── predict.py
+│   │   │   ├── processing
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── data_manager.py
+│   │   │   │   ├── features.py
+│   │   │   │   └── validation.py
+│   │   │   ├── rnd.py
+│   │   │   ├── train_pipeline.py
+│   │   │   └── trained_models
+│   │   │       ├── __init__.py
+│   │   │       └── delivery_time_output_v0.0.1.pkl
+│   │   ├── delivery_time_model_api
+│   │   │   ├── app
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── api.py
+│   │   │   │   ├── config.py
+│   │   │   │   ├── image.jpeg
+│   │   │   │   ├── main.py
+│   │   │   │   └── schemas
+│   │   │   │       ├── __init__.py
+│   │   │   │       ├── health.py
+│   │   │   │       └── predict.py
+│   │   │   ├── delivery_time_model-0.0.1-py3-none-any.whl
+│   │   │   └── requirements.txt
+│   │   ├── models
+│   │   ├── notebooks
+│   │   │   └── notebooks
+│   │   │       ├── Driver_Demand_Pred_Capstone_RND_NB.ipynb
+│   │   │       ├── Log_Best_Exp_Model.py
+│   │   │       ├── copy_of_delivery_demand_prediction_eda_capstone.py
+│   │   │       ├── driver_demand_pred_capstone_rnd_nb.py
+│   │   │       └── train.csv
+│   │   ├── requirements.txt
+│   │   ├── scripts
+│   │   └── test_requirements.txt
+│   └── driver_demand_prediction
+│       ├── Dockerfile
+│       ├── data
+│       ├── models
+│       ├── notebooks
+│       ├── requirements.txt
+│       └── scripts
+├── resources
+│   ├── Dockerfile
+│   ├── MANIFEST.in
+│   ├── myapp-deployment.yaml
+│   ├── mypy.ini
+│   ├── pyproject.toml
+│   ├── pytest.ini
+│   ├── sample-fargate-1-revision2.json
+│   ├── sample-fargate-1-revision3.json
+│   ├── setup.py
+│   └── tests
+│       ├── __ini__.py
+│       ├── conftest.py
+│       ├── test_features.py
+│       └── test_predictions.py
+└── ui_app
+    ├── app
+    │   ├── Dockerfile
+    │   ├── requirements.txt
+    │   ├── static
+    │   ├── templates
+    │   └── views
+    └── swagger
+        └── swagger.yaml
+
+52 directories, 71 files
