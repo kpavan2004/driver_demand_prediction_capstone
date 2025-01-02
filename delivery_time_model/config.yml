@@ -162,4 +162,4 @@ random_state: 42
 
 # mlflow tracking uri
 registered_model_name: delivery_time_model
-mlflow_tracking_uri: http://a7c6c99edc1b84aa8a9caae4805cfb87-1368338930.ap-south-1.elb.amazonaws:5000
+mlflow_tracking_uri: http://a7c6c99edc1b84aa8a9caae4805cfb87-1368338930.ap-south-1.elb.amazonaws.com:5000
