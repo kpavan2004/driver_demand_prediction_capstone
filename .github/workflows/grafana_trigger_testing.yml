@@ -1,4 +1,4 @@
-name: Grafana Triggered Testing
+name: Grafana Trigger Testing
 on:
   workflow_dispatch:
   repository_dispatch:
