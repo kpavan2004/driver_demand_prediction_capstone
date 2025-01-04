@@ -48,6 +48,9 @@ def run_training() -> None:
     
     # read training data
     data = load_dataset(file_name = config.app_config.training_data_file)
+
+    row_count = len(data)
+    print(f"Number of rows in the training/retraining dataset: {row_count}")
     
     def drop_zero_lat_long(data = data):
         dataframe = data[-((data["Restaurant_latitude"]==0.0) & (data["Restaurant_longitude"]==0.0)) ]
@@ -168,6 +171,7 @@ def run_training() -> None:
     save_pipeline(pipeline_to_persist = demand_pipe)
     
 if __name__ == "__main__":
-    print("Re-training:", os.environ['RE_TRAIN'])
+       
+    print("Re-Training:", os.environ['RE_TRAIN'])
     if os.environ['RE_TRAIN']=='Yes':
         run_training()

@@ -22,3 +22,4 @@ folium
 geopandas
 catboost
 optuna
+psutil

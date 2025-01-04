@@ -13,9 +13,46 @@ from sklearn.pipeline import Pipeline
 
 from delivery_time_model import __version__ as _version
 from delivery_time_model.config.core import DATASET_DIR, TRAINED_MODEL_DIR, config
-
+import boto3
+from io import StringIO
+import os
 
 ##  Pre-Pipeline Preparation
+
+
+def read_s3_csv(bucket_name, file_key):
+    """
+    Reads a CSV file from an S3 bucket and returns it as a pandas DataFrame.
+
+    Parameters:
+        bucket_name (str): The name of the S3 bucket.
+        file_key (str): The key (path) of the file in the S3 bucket.
+        aws_access_key (str, optional): AWS access key ID. 
+        aws_secret_key (str, optional): AWS secret access key. 
+        region_name (str, optional): AWS region. 
+
+    Returns:
+        pd.DataFrame: The CSV content as a pandas DataFrame.
+    """
+    
+    # Create an S3 client
+    s3 = boto3.client(
+            's3',
+            aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+            aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+            region_name='ap-south-1'
+        )
+  
+    # Fetch the file from S3
+    response = s3.get_object(Bucket=bucket_name, Key=file_key)
+
+    # Read the file content
+    csv_content = response['Body'].read().decode('utf-8')
+
+    # Convert to a pandas DataFrame
+    df = pd.read_csv(StringIO(csv_content))
+
+    return df
 
 # Extract year and month from the date column and create two another columns
 
@@ -293,8 +330,17 @@ def _load_raw_dataset(*, file_name: str) -> pd.DataFrame:
     return dataframe
 
 def load_dataset(*, file_name: str) -> pd.DataFrame:
-    dataframe = read_data_file()  # pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
-    transformed = pre_pipeline_preparation(data_frame = dataframe)
+    # dataframe = read_data_file()  # pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
+    # transformed = pre_pipeline_preparation(data_frame = dataframe)
+    train_df = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
+    bucket_name = "pk-capstone-bucket-01"
+    object_key = "inference_data/new_data.csv"
+    new_df =  read_s3_csv(bucket_name,object_key)
+    if new_df.empty :
+        combined_df = train_df
+    else:
+        combined_df = pd.concat([train_df, new_df], ignore_index=True)
+    transformed = pre_pipeline_preparation(data_frame = combined_df)
     return transformed
 
 def load_dataset_test(*, file_name: str) -> pd.DataFrame:

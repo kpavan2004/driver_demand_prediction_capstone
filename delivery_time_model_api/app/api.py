@@ -26,6 +26,61 @@ curr_path = str(Path(__file__).parent)
 from sklearn.metrics import r2_score,root_mean_squared_error
 from delivery_time_model.processing.data_manager import load_dataset_test1
 import psutil
+import boto3
+import os
+from io import StringIO
+
+def append_to_csv_in_s3(bucket_name, object_key,new_data, aws_access_key_id=None, aws_secret_access_key=None, region_name=None):
+    """
+    Appends a new record to an existing CSV file in S3.
+
+    Parameters:
+        bucket_name (str): The name of the S3 bucket.
+        object_key (str): The key (path/filename) of the CSV file in the S3 bucket.
+        new_data (dict): The new record to append as a dictionary.
+        aws_access_key_id (str, optional): AWS access key ID.
+        aws_secret_access_key (str, optional): AWS secret access key.
+        region_name (str, optional): AWS region.
+
+    Returns:
+        str: The S3 object URL after the update.
+    """
+    # Initialize the S3 client
+    s3_client = boto3.client(
+        's3',
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        region_name=region_name
+    )
+
+    try:
+        # Download the existing file from S3
+        response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
+        existing_data = response['Body'].read().decode('utf-8')
+        
+        # Load the existing CSV into a DataFrame
+        existing_df = pd.read_csv(StringIO(existing_data))
+    except s3_client.exceptions.NoSuchKey:
+        # If the file doesn't exist, create an empty DataFrame
+        existing_df = pd.DataFrame()
+        
+    # Convert the new data to a DataFrame
+    new_df = new_data
+
+    # Combine old and new DataFrames, and drop duplicates
+    combined_df = pd.concat([existing_df, new_df], ignore_index=True)
+    deduped_df = combined_df.drop_duplicates()
+
+    # Convert the updated DataFrame to CSV
+    csv_buffer = StringIO()
+    deduped_df.to_csv(csv_buffer, index=False)
+
+    # Upload the updated CSV back to S3
+    s3_client.put_object(Bucket=bucket_name, Key=object_key, Body=csv_buffer.getvalue())
+
+    # Return the S3 object URL
+    s3_url = f"https://{bucket_name}.s3.amazonaws.com/{object_key}"
+    return s3_url
 
 api_router = APIRouter()
 
@@ -55,7 +110,27 @@ async def predict(input_data: schemas.MultipleDataInputs_api) -> Any:
 
     if results["errors"] is not None:
         raise HTTPException(status_code=400, detail=json.loads(results["errors"]))
+    
+    predictions_value = ' (min)' + str(results['predictions'][0])
+      
+    if results["errors"] is not None:
+        raise HTTPException(status_code=400, detail=json.loads(results["errors"]))
 
+    bucket_name = "pk-capstone-bucket-01"
+    object_key = "inference_data/new_data.csv"
+    
+    input_df['Time_taken(min)'] = [predictions_value]
+    # Provide AWS credentials and region if required
+    s3_url = append_to_csv_in_s3(
+        bucket_name=bucket_name,
+        object_key=object_key,
+        new_data=input_df,
+        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+        region_name="ap-south-1"
+    )
+    print(f"CSV uploaded successfully to {s3_url}")
+    
     return results
 
 rmse_metric = prom.Gauge('delivery_time_rmse', 'Root mean square error for few random test samples')
