@@ -1,4 +1,4 @@
-name: CICD Retrain Pipeline
+name: CICD Train Pipeline
 
 on:
   push:
