@@ -30,7 +30,7 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
-      run: python delivery_time_model/train_pipeline.py
+      run: python delivery_time_model/train_pipeline.py Yes
     - uses: actions/upload-artifact@v3
       with:
         name: my-trained-pipeline
