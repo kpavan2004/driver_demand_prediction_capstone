@@ -1,4 +1,4 @@
-name: CICD Train Pipeline
+name: CICD Pipeline
 
 on:
   push:
