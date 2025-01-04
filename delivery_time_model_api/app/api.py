@@ -111,25 +111,22 @@ async def predict(input_data: schemas.MultipleDataInputs_api) -> Any:
     if results["errors"] is not None:
         raise HTTPException(status_code=400, detail=json.loads(results["errors"]))
     
-    predictions_value = ' (min)' + str(results['predictions'][0])
-      
-    if results["errors"] is not None:
-        raise HTTPException(status_code=400, detail=json.loads(results["errors"]))
+    # predictions_value = ' (min)' + str(results['predictions'][0])
 
-    bucket_name = "pk-capstone-bucket-01"
-    object_key = "inference_data/new_data.csv"
+    # bucket_name = "pk-capstone-bucket-01"
+    # object_key = "inference_data/new_data.csv"
     
-    input_df['Time_taken(min)'] = [predictions_value]
-    # Provide AWS credentials and region if required
-    s3_url = append_to_csv_in_s3(
-        bucket_name=bucket_name,
-        object_key=object_key,
-        new_data=input_df,
-        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-        aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
-        region_name="ap-south-1"
-    )
-    print(f"CSV uploaded successfully to {s3_url}")
+    # input_df['Time_taken(min)'] = [predictions_value]
+    # # Provide AWS credentials and region if required
+    # s3_url = append_to_csv_in_s3(
+    #     bucket_name=bucket_name,
+    #     object_key=object_key,
+    #     new_data=input_df,
+    #     aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+    #     aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+    #     region_name="ap-south-1"
+    # )
+    # print(f"CSV uploaded successfully to {s3_url}")
     
     return results
 
