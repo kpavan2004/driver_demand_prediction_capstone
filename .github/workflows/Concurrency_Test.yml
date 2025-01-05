@@ -11,12 +11,26 @@ on:
   schedule:
     - cron: "0 0 1 * *"  # Runs on the 1st day of every month at midnight UTC
 jobs:
+  pre-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for Running Workflows
+        id: check
+        run: |
+          runs=$(gh run list --workflow "${{ github.workflow }}" --branch "${{ github.ref_name }}" --json status --jq '.[] | select(.status=="in_progress")')
+          if [ -n "$runs" ]; then
+            echo "A workflow is already running. Exiting..."
+            exit 1
+          fi
+      - name: Proceed with Workflow
+        run: echo "No running workflows. Proceeding..."
+        
   test-concurrency:
     runs-on: ubuntu-latest
 
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: false  # Cancel previous runs in the same group
+    # concurrency:
+    #   group: ${{ github.workflow }}-${{ github.ref }}
+    #   cancel-in-progress: false  # Cancel previous runs in the same group
 
     steps:
       - name: Start Workflow
