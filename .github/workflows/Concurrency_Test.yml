@@ -24,7 +24,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
         run: |
-          runs=$(gh run list --workflow "${{ github.workflow }}" --branch "${{ github.ref_name }}" --json status --jq '.[] | select(.status=="in_progress")')
+          runs=$(gh run list --workflow "${{ github.workflow }}" --branch "${{ github.ref_name }}" --repo "${{ github.repository }}" --json status --jq '.[] | select(.status=="in_progress")')
           if [ -n "$runs" ]; then
             echo "A workflow is already running. Exiting..."
             exit 1
