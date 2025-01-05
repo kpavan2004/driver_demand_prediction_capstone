@@ -16,7 +16,7 @@ jobs:
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true  # Cancel previous runs in the same group
+      cancel-in-progress: false  # Cancel previous runs in the same group
 
     steps:
       - name: Start Workflow
