@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Check for Running Workflows
         id: check
+        env:
+          GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
         run: |
           runs=$(gh run list --workflow "${{ github.workflow }}" --branch "${{ github.ref_name }}" --json status --jq '.[] | select(.status=="in_progress")')
           if [ -n "$runs" ]; then
