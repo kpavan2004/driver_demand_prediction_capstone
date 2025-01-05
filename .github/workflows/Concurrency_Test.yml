@@ -28,8 +28,8 @@ jobs:
             --workflow "Concurrency Test Workflow" \
             --branch "main" \
             --repo "kpavan2004/driver_demand_prediction_capstone" \
-            --json status,id \
-            --jq '.[] | select(.status=="in_progress" and .id != '${{ github.run_id }}')')
+            --json status,databaseId \
+            --jq '.[] | select(.status=="in_progress" and .databaseId != '${{ github.run_id }}')')
           if [ -n "$runs" ]; then
             echo "A workflow is already running. Exiting..."
             exit 1
