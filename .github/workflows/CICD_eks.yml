@@ -37,6 +37,7 @@ jobs:
       - name: Proceed with Workflow
         run: echo "No running workflows. Proceeding..."
   train:
+    needs: pre-check
     env:
       RE_TRAIN: Yes      # Re-train 'Yes' / 'No'?
     runs-on: ubuntu-latest
