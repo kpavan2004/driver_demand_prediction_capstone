@@ -9,7 +9,6 @@ on:
       - grafana_trigger
   schedule:
     - cron: "0 0 1 * *"  # Runs on the 1st day of every month at midnight UTC
-	
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
