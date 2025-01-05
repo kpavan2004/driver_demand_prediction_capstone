@@ -1,0 +1,31 @@
+name: Concurrency Test Workflow
+
+on:
+  push:
+    branches:
+      - main  # Trigger on pushes to the main branch
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+      - grafana_trigger
+  schedule:
+    - cron: "0 0 1 * *"  # Runs on the 1st day of every month at midnight UTC
+jobs:
+  test-concurrency:
+    runs-on: ubuntu-latest
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true  # Cancel previous runs in the same group
+
+    steps:
+      - name: Start Workflow
+        run: echo "Starting concurrency test workflow..."
+
+      - name: Simulate Long-Running Job
+        run: |
+          echo "Sleeping for 120 seconds..."
+          sleep 120
+
+      - name: Complete Workflow
+        run: echo "Workflow completed!"
