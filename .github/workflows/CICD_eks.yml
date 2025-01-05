@@ -11,6 +11,31 @@ on:
   schedule:
     - cron: "0 0 1 * *"  # Runs on the 1st day of every month at midnight UTC
 jobs:
+  pre-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
+
+      - name: Authenticate GitHub CLI
+        run: echo "${{ secrets.GH_ACCESS_TOKEN }}" | gh auth login --with-token
+      - name: Check for Running Workflows
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+        run: |
+          runs=$(gh run list \
+            --workflow "CICD Pipeline" \
+            --branch "main" \
+            --repo "kpavan2004/driver_demand_prediction_capstone" \
+            --json status,databaseId \
+            --jq '.[] | select(.status=="in_progress" and .databaseId != '${{ github.run_id }}')')
+          if [ -n "$runs" ]; then
+            echo "A workflow is already running. Exiting..."
+            exit 1
+          fi
+      - name: Proceed with Workflow
+        run: echo "No running workflows. Proceeding..."
   train:
     env:
       RE_TRAIN: Yes      # Re-train 'Yes' / 'No'?
