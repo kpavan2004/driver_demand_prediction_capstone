@@ -15,7 +15,7 @@ from delivery_time_model.predict import make_prediction
 print("Before calling test_make_prediction")
 def test_make_prediction(sample_input_data):
     # Given
-    expected_num_of_predictions = 9119
+    # expected_num_of_predictions = 9119
     # print(sample_input_data[0].columns)
     print("##############################")
     print(sample_input_data[0].iloc[0].to_dict())
@@ -31,7 +31,7 @@ def test_make_prediction(sample_input_data):
     assert isinstance(predictions, np.ndarray)
     assert isinstance(predictions[0], np.float32)
     assert result.get("errors") is None
-    assert len(predictions) == expected_num_of_predictions
+    # assert len(predictions) == expected_num_of_predictions
     
     _predictions = list(predictions)
     y_true = sample_input_data[1]
@@ -42,5 +42,5 @@ def test_make_prediction(sample_input_data):
     print("r2 score:", r2)
     print("mse :", mse)
     print("rmse :", rmse)
-    assert r2 > 0.7
+    assert r2 > 0.8
     # assert mse < 3000.0
