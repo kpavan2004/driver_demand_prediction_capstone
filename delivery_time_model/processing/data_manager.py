@@ -20,7 +20,7 @@ import os
 ##  Pre-Pipeline Preparation
 
 
-def read_s3_csv(bucket_name, file_key):
+def read_s3_csv(bucket_name, folder_prefix):
 	
     # Create an S3 client
     s3 = boto3.client(
