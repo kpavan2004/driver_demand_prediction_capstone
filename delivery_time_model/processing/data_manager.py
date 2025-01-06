@@ -335,7 +335,7 @@ def _load_raw_dataset(*, file_name: str) -> pd.DataFrame:
 def load_dataset(*, file_name: str) -> pd.DataFrame:
     train_df = read_data_file()  # pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
     bucket_name = "pk-capstone-bucket-01"
-    object_key = "inference_data/new_data.csv"
+    object_key = "new_data/"
     new_df =  read_s3_csv(bucket_name,object_key)
     if new_df.empty :
         combined_df = train_df
