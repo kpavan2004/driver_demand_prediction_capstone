@@ -350,7 +350,7 @@ def load_dataset_test(*, file_name: str) -> pd.DataFrame:
     return transformed
 
 def load_dataset_test1(*, file_name: str) -> pd.DataFrame:
-    dataframe = read_data_file()  #pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
+    train_df = read_data_file()  #pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
     bucket_name = "pk-capstone-bucket-01"
     object_key = "new_data/"
     new_df =  read_s3_csv(bucket_name,object_key)
