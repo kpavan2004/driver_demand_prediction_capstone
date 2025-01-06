@@ -64,6 +64,7 @@ rmse_metric = prom.Gauge('delivery_time_rmse', 'Root mean square error for few r
 r2_metric = prom.Gauge('delivery_time_r2_score', 'R2 score for random test samples')
 cpu_usage_gauge = prom.Gauge("app_cpu_usage_percent", "CPU usage of the app")
 memory_usage_gauge = prom.Gauge("app_memory_usage_bytes", "Memory usage of the app")
+app_health = prom.Gauge('application_health_status', 'Health status of the application')
 
 # Function for updating metrics
 def update_metrics():
@@ -92,6 +93,7 @@ def update_metrics():
     cpu_usage_gauge.set(psutil.cpu_percent())
     memory_info = psutil.virtual_memory()
     memory_usage_gauge.set(memory_info.used)
+    app_health.set(1)
   
 @api_router.get("/metrics")
 async def get_metrics():
