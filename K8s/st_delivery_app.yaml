@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delivery-time-st-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: delivery-time-st-app
+  template:
+    metadata:
+      labels:
+        app: delivery-time-st-app
+    spec:
+      containers:
+      - name: stapp-delivery-time
+        image: kpavan2004/delivery_time_st_app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8501
+        env:
+        - name: GOOGLE_MAPS_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secret
+              key: GOOGLE_MAPS_API_KEY
+        - name: WEATHER_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secret
+              key: WEATHER_API_KEY
+        - name: TRAFFIC_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secret
+              key: TRAFFIC_API_KEY
+        - name: HOSTNAME
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secret
+              key: HOSTNAME
+        - name: USER
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secret
+              key: USER
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secret
+              key: PASSWORD
+        - name: DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secret
+              key: DATABASE
+        - name: FAST_API_APP_URL
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secret
+              key: FAST_API_APP_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: delivery-time-st-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: delivery-time-st-app
+  ports:
+  - port: 8501
+    targetPort: 8501

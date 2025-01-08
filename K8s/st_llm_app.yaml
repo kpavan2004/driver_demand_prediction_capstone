@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streamlit-llm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: streamlit-llm
+  template:
+    metadata:
+      labels:
+        app: streamlit-llm
+    spec:
+      containers:
+      - name: streamlitapp-llm
+        image: kpavan2004/st_llm_app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8502
+        env:
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secret
+              key: OPENAI_API_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: streamlit-llmapp
+spec:
+  type: LoadBalancer
+  selector:
+    app: streamlit-llm
+  ports:
+  - port: 8502
+    targetPort: 8502
