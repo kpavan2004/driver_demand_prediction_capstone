@@ -1,3 +1,5 @@
+[![CICD Pipeline](https://github.com/kpavan2004/driver_demand_prediction_capstone/actions/workflows/CICD_eks.yml/badge.svg)](https://github.com/kpavan2004/driver_demand_prediction_capstone/actions/workflows/CICD_eks.yml)
+
 # driver_demand_prediction_capstone
 The    food delivery industry faces significant challenges in predicting driver demand and accurately estimating delivery times. The efficiency of the delivery process directly affects customer satisfaction, operational costs, and overall service reliability. Inaccurate predictions of delivery times and driver allocation often lead to under- or over-supply of drivers, delays in deliveries, and unsatisfactory customer experiences. This project aims to develop a machine learning-based predictive model to optimize delivery charges and predict driver demand based on various parameters, improving both the customer experience and operational efficiency for delivery services.
 
