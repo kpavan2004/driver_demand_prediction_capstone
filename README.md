@@ -73,3 +73,17 @@ Note to change port visibility from private to public incase of github codespace
 docker run -it -d -p 3000:3000 -u root -v "$PWD/grafana-data:/var/lib/grafana" --env-file "$PWD/env.list" --name=grafana_cont grafana/grafana-oss
 ```
 Note to change port visibility from private to public incase of github codespace
+
+## EKS Deployment
+1. Create EKS Cluster
+2. Create Kubernetes secret
+3. Start Mlflow :  kubectl apply -f K8s/mlflow-deployment.yaml
+4. Log the best model to Mlflow : python Log_Best_Exp_Model.py
+5. Update the set_tracking_uri in delivery_time_model/config.yml file
+6. Trigger the workflow CICD_eks.yml
+7. Start Prometheus : kubectl apply -f K8s/prometheus-deployment.yaml
+8. Start Grafana: kubectl apply -f K8s/grafana-deployment.yaml
+9. Start llm app: kubectl apply -f K8s/st_llm_app.yaml
+10. Start delivery time front end app :  kubectl apply -f K8s/st_delivery_app.yaml
+11. Start Demand forecast app: kubectl apply -f K8s/st_demand_app.yaml
+
