@@ -52,7 +52,7 @@ jobs:
       - name: Simulate Long-Running Job
         run: |
           echo "Sleeping for 120 seconds..."
-          sleep 120
+          sleep 30
 
       - name: Complete Workflow
         run: echo "Workflow completed!"
