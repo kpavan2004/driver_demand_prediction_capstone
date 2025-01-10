@@ -40,6 +40,7 @@ jobs:
       - name: Proceed with Workflow
         run: echo "No running workflows. Proceeding..."
   build:
+    needs: pre-check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
